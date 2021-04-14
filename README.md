@@ -1,8 +1,8 @@
-# pybullet_multiagent_follow_env
+# Multiagent Follow Envirnoment
 
 **Object Oriented MultiAgent Environment** Using [Pybullet](https://github.com/bulletphysics/bullet3)
 
-<img src="images/demo.gif" width=600px>
+<img src="images/demo.gif" width=800px>
 
 ## 🌱 Installation 
 ![](https://img.shields.io/badge/python-3.6.8-blue)
