@@ -2,7 +2,7 @@
 
 **Object Oriented MultiAgent Environment** Using [Pybullet](https://github.com/bulletphysics/bullet3)
 
-<img src="https://drive.google.com/file/d/1nisUGl_vEevc_bnK_rllWE39biwSILjF/view?usp=sharing" width=800px>
+<img src="images/demo.gif" width=800px>
 
 ## 🌱 Installation 
 ![](https://img.shields.io/badge/python-3.6.8-blue)
@@ -70,6 +70,8 @@ def distance(self, other):
 
 ### 🐋 3. Reinforcement Learning
 By giving the position of the obstacles to the observaiton of the agent, you can implement Avoid Obstacles RL task.
+
+<img src="images/avoidance.gif" width=800px>
 
 
 
