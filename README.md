@@ -1,1 +1,79 @@
 # pybullet_multiagent_follow_env
+
+**Object Oriented MultiAgent Environment** Using [Pybullet](https://github.com/bulletphysics/bullet3)
+
+<img src="images/demo.gif" width=600px>
+
+## 🌱 Installation 
+![](https://img.shields.io/badge/python-3.6.8-blue)
+
+`pip install -e .`
+
+## 🌱 User Guide 
+
+### 🐋 1. objects in the environment
+Every objects in the enviroment is in the `environment.objects` dictionary and you can easily calculate an interaction between two agents in the environment 
+
+```python
+# for example
+self.objects = {'target':[PhysicalObjects(), PhysicalObjects()],
+                'agent':[Agent(), Agent()], 
+                'obstacle':[PhysicalObjects(), PhysicalObjects(), PhysicalObjects()]}
+```
+
+Every objects in the environment inherits `PhysicalObjects` Class which is the base class for the moving objects. 
+
+|member variables | description| type|
+|:-:|:--| :-:|
+self.position | current position of the object| `list[3]`| 
+self.velocity | current velocity of the object|`list[3]`| 
+self.max_speed | maximum speed, the velocity will be bounded | `float`
+self.acc | acceleration | `float`
+self.speed_decreasing | effect like friction | `float`
+self.pid | pybullet id. you can get it by calling `p.loadURDF( )` |  `int`
+self.safe_boundary  | to calculate collision between two agents  | `float`
+self.move_kind | the movement strategy for the current timestep | `str` |
+
+
+###  🐋 2. Design strategy of agent
+
+Agent is also the `PhysicalObject` and there are additional functions for Agent.
+
+With these functions you can implement reinforcement learning code easily
+
+```python
+# Example :  FollowAvoid Scenario
+# Take action 
+def take_action(self, action):
+    if action < 5 :
+        p.applyExternalForce(self.pid, -1, 
+                                forceObj = [Agent.dx[action]*self.acc, Agent.dy[action]*self.acc, 0],
+                                posObj=self.position,
+                                flags=p.WORLD_FRAME) 
+    elif action == 5 :
+        p.resetBaseVelocity(self.pid, [0,0,0])
+    else:
+        raise ValueError("Undefined action %d" %action)
+
+# compute relative position with other PhysicalObject object
+def relative_position(self, other):
+    reltaive = [other.position[i] - self.position[i] for i in range(3)]
+    return reltaive
+    
+def relative_velocity(self, other):
+    relative = [other.velocity[i] - self.velocity[i] for i in range(3)]
+    return relative
+
+def distance(self, other):
+    return np.linalg.norm(self.relative_position(other))
+```
+
+
+### 🐋 3. Questions
+
+Because the code is not that too long, I didn't write a detailed instruction. If there is some issues or questions please **Submit new Issue**.
+
+
+
+
+
