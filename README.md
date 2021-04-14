@@ -15,7 +15,7 @@
 ## 🌱 User Guide 
 
 ### 🐋 1. objects in the environment
-Every objects in the enviroment is in the `environment.objects` dictionary and you can easily calculate an interaction between two agents in the environment 
+Every objects in the enviroment is in the `environment.objects` whose type is dictionary.
 
 ```python
 # for example
@@ -24,9 +24,11 @@ self.objects = {'target':[PhysicalObjects(), PhysicalObjects()],
                 'obstacle':[PhysicalObjects(), PhysicalObjects(), PhysicalObjects()]}
 ```
 
+You can easily calculate an interaction between two objects in the environment 
+
 Every objects in the environment inherits `PhysicalObjects` Class which is the base class for the moving objects. 
 
-|member variables | description| type|
+|member variables of the object| description| type|
 |:-:|:--| :-:|
 self.position | current position of the object| `list[3]`| 
 self.velocity | current velocity of the object|`list[3]`| 
@@ -37,15 +39,16 @@ self.pid | pybullet id. you can get it by calling `p.loadURDF( )` |  `int`
 self.safe_boundary  | to calculate collision between two agents  | `float`
 self.move_kind | the movement strategy for the current timestep | `str` |
 
+> Of course you can add more variables if you want!
 
-###  🐋 2. Design strategy of agent
+###  🐋 2. Design strategy of the agent
 
 Agent is also the `PhysicalObject` and there are additional functions for Agent.
 
 With these functions you can implement reinforcement learning code easily
 
 ```python
-# Example :  FollowAvoid Scenario
+# Example :  FollowAvoid Scenario - Agent Class
 # Take action 
 def take_action(self, action):
     if action < 5 :
@@ -63,12 +66,7 @@ def relative_position(self, other):
     reltaive = [other.position[i] - self.position[i] for i in range(3)]
     return reltaive
     
-def relative_velocity(self, other):
-    relative = [other.velocity[i] - self.velocity[i] for i in range(3)]
-    return relative
-
-def distance(self, other):
-    return np.linalg.norm(self.relative_position(other))
+...
 ```
 
 ### 🐋 3. Reinforcement Learning
