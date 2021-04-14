@@ -72,6 +72,9 @@ def relative_position(self, other):
 ### 🐋 3. Reinforcement Learning
 By giving the position of the obstacles as the observaiton of the agent, you can implement Avoid Obstacles RL task.
 
+* Green : Agent
+* White : Obstacle
+
 <img src="images/avoidance.gif" width=800px>
 
 
