@@ -2,10 +2,13 @@
 
 **Object Oriented MultiAgent Environment** Using [Pybullet](https://github.com/bulletphysics/bullet3)
 
+> There is a lag before it is loaded.
 <img src="images/demo.gif" width=800px>
 
 ## 🌱 Installation 
 ![](https://img.shields.io/badge/python-3.6.8-blue)
+
+
 
 `pip install -e .`
 
