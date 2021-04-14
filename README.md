@@ -80,7 +80,7 @@ By giving the position of the obstacles as the observaiton of the agent, you can
 
 ## 🌱 Questions
 
-Because the code is not that too lng, I didn't write a detailed instruction. If there is some issues or questions please **Submit new Issue**.
+If there is some issues or questions please **Submit new Issue**.
 
 
 
