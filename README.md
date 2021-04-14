@@ -71,8 +71,7 @@ def distance(self, other):
 
 ### 🐋 3. Questions
 
-Because the code is not that too long, I didn't write a detailed instruction. If there is some issues or questions please **Submit new Issue**.
-
+Because the code is not that too lng, I didn't write a detailed instruction. If there is some issues or questions please **Submit new Issue**.
 
 
 
