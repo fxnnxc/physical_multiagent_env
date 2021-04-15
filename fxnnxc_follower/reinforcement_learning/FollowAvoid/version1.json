@@ -1,0 +1,29 @@
+{
+    "env_config":{
+        "num_agents" : 1,
+        "num_obstacles" : 5,
+        "num_targets" : 1,
+        "map_size" : 5
+    },
+
+    "rllib_config":{
+        "model" : "PPO",
+        "num_workers" : 1,
+        "num_gpus" : 0,
+        "local_dir" : "./checkpoints/",
+        "name" : "version1",
+        "checkpoint_freq" : 100,
+        "framework" :  "torch",
+        "stop":{
+            "training_iteration" : 1111
+        },
+        "exploration_config": {
+            "type": "EpsilonGreedy",
+            "initial_epsilon": 1.0,
+            "final_epsilon": 0.02,
+            "epsilon_timesteps": 100
+        }
+    }
+}
+
+

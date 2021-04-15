@@ -67,7 +67,6 @@ class PhysicalObjects:
 
 
 
-
 from gym.spaces import Discrete, Box, Dict
 class Agent(PhysicalObjects):
     dx = [0, 0, 0, 1,-1]
@@ -93,11 +92,11 @@ class Agent(PhysicalObjects):
             raise ValueError("Undefined action %d" %action)
 
     def relative_position(self, other):
-        reltaive = [other.position[i] - self.position[i] for i in range(3)]
+        reltaive = np.array([other.position[i] - self.position[i] for i in range(3)])
         return reltaive
 
     def relative_velocity(self, other):
-        relative = [other.velocity[i] - self.velocity[i] for i in range(3)]
+        relative = np.array([other.velocity[i] - self.velocity[i] for i in range(3)])
         return relative
 
     def distance(self, other):
