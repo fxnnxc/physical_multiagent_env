@@ -43,6 +43,8 @@ class FollowAvoid(PhysicalEnv):
         return state, reward, done, info
 
     def _reward(self, agents): 
+        # MAX : +1 (no collision and full target follwing)
+        # MIN : -3 (collision at the last step)
         self.remove_candidates.clear()  
         reward = {a:-1/self.max_timestep for a  in agents}
         for a in agents:
