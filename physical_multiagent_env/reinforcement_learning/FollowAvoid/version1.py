@@ -23,6 +23,7 @@ class FollowAvoidRay(FollowAvoid, MultiAgentEnv):
 
 
 if __name__ == '__main__':
+    
     parser = argparse.ArgumentParser()
     parser.add_argument('--test', action="store_true")
     parser.add_argument("--resume", action="store_true")

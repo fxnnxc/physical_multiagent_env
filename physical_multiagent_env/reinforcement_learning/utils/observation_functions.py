@@ -30,13 +30,14 @@ class Observation_1:
                             dg = dangerous_degree(agent.velocity, obj.velocity, distance)
                             dg = max(new_obs[a]['4x4_observation'][position[0], position[1]], dg)
                             new_obs[a]['4x4_observation'][position[0], position[1]] = dg
+                            #new_obs[a]['4x4_observation'][position[0], position[1],:] = agent.relative_velocity(obj)
 
         return new_obs
 
 
 def dangerous_degree(v1, v2, distance):
     v1, v2 = np.array(v1), np.array(v2)
-    return np.linalg.norm(1/(v1+v2+1)) * (1/(1+distance)) 
+    return np.linalg.norm(1/(v1+v2+1)) * (1/(1+distance)) * (1 + np.linalg.norm(v1) + np.linalg.norm(v2))
 
 def clipping(x, lower, upper):
     return np.clip(x, lower, upper)
