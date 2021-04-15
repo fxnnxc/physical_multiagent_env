@@ -11,6 +11,7 @@ class PhysicalObjects:
         self.pid = p.loadURDF(urdf, initial_position, globalScaling=scaling)
         self.safe_boundary = kwargs.get("safe_boundary", 0.1)
         self.move_kind = "random_direction"
+        self.alive = True
         p.changeDynamics(self.pid, -1, mass=mass)
         p.changeVisualShape(self.pid, -1, rgbaColor=kwargs.get("color", [0,0,125,1]))
 
@@ -63,8 +64,9 @@ class PhysicalObjects:
         self.velocity = p.getBaseVelocity(self.pid)[0]
         
     def remove(self):
-        p.removeBody(self.pid)
-
+        if self.alive:
+            self.alive=False
+            p.removeBody(self.pid)
 
 
 from gym.spaces import Discrete, Box, Dict
