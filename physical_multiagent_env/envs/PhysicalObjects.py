@@ -15,7 +15,15 @@ class PhysicalObjects:
         p.changeDynamics(self.pid, -1, mass=mass)
         p.changeVisualShape(self.pid, -1, rgbaColor=kwargs.get("color", [0,0,125,1]))
 
-    def move(self, kind, **kwargs):
+    def move(self, kind, bound, **kwargs):
+        if np.linalg.norm(self.position) > bound:
+            force = [-self.position[0]/bound, -self.position[1]/bound, -self.position[2]/bound]
+            p.applyExternalForce(self.pid, -1, 
+                            forceObj=force,
+                            posObj=self.position,
+                            flags=p.WORLD_FRAME)
+            return 
+
         force = [0, 0, 0]
         if kind=="circle_motion":
             period = kwargs.get("period")
@@ -82,7 +90,15 @@ class Agent(PhysicalObjects):
                                         'own_velocity': Box(low=-np.inf, high=np.inf, shape=(3,))
                                     }) 
 
-    def take_action(self, action):
+    def take_action(self, action, bound):
+        if np.linalg.norm(self.position) > bound:
+            force = [-self.position[0]/bound, -self.position[1]/bound, -self.position[2]/bound]
+            p.applyExternalForce(self.pid, -1, 
+                            forceObj=force,
+                            posObj=self.position,
+                            flags=p.WORLD_FRAME)
+            return
+            
         if action < 5 :
             p.applyExternalForce(self.pid, -1, 
                                     forceObj = [Agent.dx[action]*self.acc, Agent.dy[action]*self.acc, 0],

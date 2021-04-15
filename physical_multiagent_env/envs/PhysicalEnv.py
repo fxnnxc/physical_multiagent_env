@@ -79,11 +79,11 @@ class PhysicalEnv(gym.Env):
         
     def step(self, agent_action):
         for agent, action in agent_action.items():
-            self.objects['agent'][agent].take_action(action)
+            self.objects['agent'][agent].take_action(action, bound=self.map_size)
         for target in self.objects['target']:
-            target.move(target.move_kind)
+            target.move(target.move_kind, bound=self.map_size)
         for obstacle in self.objects['obstacle']:
-            obstacle.move(obstacle.move_kind)
+            obstacle.move(obstacle.move_kind, bound=self.map_size)
         
         p.stepSimulation()
 

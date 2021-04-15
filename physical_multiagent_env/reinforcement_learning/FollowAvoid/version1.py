@@ -1,5 +1,7 @@
 import json
 import argparse 
+import pybullet as p 
+import time 
 
 import ray 
 from ray.tune.registry import register_env 
@@ -9,6 +11,7 @@ from ray.rllib.policy.sample_batch import SampleBatch
 from ray.rllib.models import ModelCatalog 
 from gym.spaces import Discrete, Box, Dict 
 from ray.rllib.env.multi_agent_env import MultiAgentEnv  
+from ray.rllib.agents.ppo import PPOTrainer
 
 from physical_multiagent_env.scenarios.FollowAvoid.scenario import FollowAvoid
 from physical_multiagent_env.reinforcement_learning.utils.observation_functions import Observation_1
@@ -70,9 +73,9 @@ if __name__ == '__main__':
                     )    
     else:
         agent = PPOTrainer(config=config, env=FollowAvoidRay)
-        agent.restore(checkpoint)
+        agent.restore(args.checkpoint)
 
-        config['env_config']['map_size'] = 5
+        # config['env_config']['map_size'] = 3
         config['env_config']["connect"] =p.GUI
 
         env = FollowAvoidRay(config['env_config'])
@@ -83,11 +86,11 @@ if __name__ == '__main__':
             if count==0:
                 time.sleep(5)
             alive_agents = [k for k,v in done.items() if v==False]
-            obs = observation_fn(obs, env)
+            obs = Observation_1.observation_fn_1(obs, env)
             actions =  {i:agent.compute_action(obs[i], policy_id=f"pol") 
                                     for i in alive_agents if i!="__all__"}
             obs, reward, done, info = env.step(actions)
-            time.sleep(0.02)
+            time.sleep(0.001)
             count += 1
     
     

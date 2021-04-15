@@ -17,8 +17,8 @@ class Observation_1:
         for a in agent_obs.keys():
             agent = env.objects['agent'][a]
             for i, target in enumerate(env.objects['target']):
-                new_obs[a][f'target_relative_position_{i}'] = agent.relative_position(target)
-                new_obs[a][f'target_relative_velocity_{i}'] = agent.relative_velocity(target)
+                new_obs[a][f'target_relative_position_{i}'] = log_scaling(agent.relative_position(target))
+                new_obs[a][f'target_relative_velocity_{i}'] = log_scaling(agent.relative_velocity(target))
                 new_obs[a]['4x4_observation'] = np.zeros((4,4)) # relative position and dangerous_degree
 
                 for obj_type, obj_list in env.objects.items():

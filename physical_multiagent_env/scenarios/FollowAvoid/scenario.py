@@ -12,17 +12,17 @@ class FollowAvoid(PhysicalEnv):
         self.directions = ["x+", "x-", "y+", "y-"]    
 
     def step(self, agent_action):
-        if self.timestep % 100 == 0:
+        if self.timestep % 300 == 0:
             for object_type, object_list in self.objects.items():
                 for obj in object_list:
                     obj.move_kind = random.choice(self.directions)
 
         for agent, action in agent_action.items():
-            self.objects['agent'][agent].take_action(action)
+            self.objects['agent'][agent].take_action(action, bound=self.map_size)
         for target in self.objects['target']:
-            target.move(target.move_kind)
+            target.move(target.move_kind, bound=self.map_size)
         for obstacle in self.objects['obstacle']:
-            obstacle.move(obstacle.move_kind)
+            obstacle.move(obstacle.move_kind, bound=self.map_size)
         
         p.stepSimulation()
 
@@ -59,7 +59,7 @@ class FollowAvoid(PhysicalEnv):
                             self.remove_candidates.append(a)
             for target in self.objects['target']:
                 distance = agent.distance(target)
-                if 2 < distance < 2.5:
+                if 1 < distance < 1.2:
                     reward[a] +=20/self.max_timestep
         return reward 
 
