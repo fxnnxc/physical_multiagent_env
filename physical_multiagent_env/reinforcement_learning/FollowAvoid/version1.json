@@ -1,15 +1,16 @@
 {
     "env_config":{
         "num_agents" : 1,
-        "num_obstacles" : 5,
+        "num_obstacles" : 10,
         "num_targets" : 1,
-        "map_size" : 5
+        "map_size" : 5,
+        "max_timestep" : 3000
     },
 
     "rllib_config":{
         "model" : "PPO",
-        "num_workers" : 1,
-        "num_gpus" : 0,
+        "num_workers" : 5,
+        "num_gpus" : 1,
         "local_dir" : "./checkpoints/",
         "name" : "version1",
         "checkpoint_freq" : 100,

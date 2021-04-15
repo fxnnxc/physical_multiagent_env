@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name = "fxnnxc_follower",
+    name = "physical_multiagent_env",
     version ="0.1",
     description="gym multiagent environments for multiagent using pybullet",
     author = "fxnnxc",

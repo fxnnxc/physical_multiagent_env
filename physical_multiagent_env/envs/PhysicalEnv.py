@@ -1,4 +1,4 @@
-from fxnnxc_follower.envs.PhysicalObjects import PhysicalObjects, Agent
+from physical_multiagent_env.envs.PhysicalObjects import PhysicalObjects, Agent
 import pybullet as p 
 import numpy as np 
 import time 

@@ -1,4 +1,4 @@
-from fxnnxc_follower.envs.PhysicalEnv import PhysicalEnv
+from physical_multiagent_env.envs.PhysicalEnv import PhysicalEnv
 import pybullet as p 
 import numpy as np 
 import random 
@@ -6,10 +6,10 @@ import random
 class FollowAvoid(PhysicalEnv):
     def __init__(self, config={}):
         super().__init__(config)
+        self.max_timestep = config.get("max_timestep", 10000)
         self.remove_candidates =[]
         self.terminal_agent_num = np.clip(config.get("terminal_agent_num", 10), 1, self.num_agents)
-        self.directions = ["x+", "x-", "y+", "y-"]
-    
+        self.directions = ["x+", "x-", "y+", "y-"]    
 
     def step(self, agent_action):
         if self.timestep % 100 == 0:
@@ -32,9 +32,9 @@ class FollowAvoid(PhysicalEnv):
                 obj.decrease_velocity()
                 obj.clip_velocity()
 
-        state ={i : np.hstack([agent.position,
-                               agent.velocity])
-                for i, agent in enumerate(self.objects['agent'])}
+        state ={agent : np.hstack([self.objects['agent'][agent].position,
+                                   self.objects['agent'][agent].velocity])
+                    for agent in agent_action.keys()}
 
         reward = self._reward(agent_action.keys())
         done = self._done(agent_action.keys())
@@ -44,7 +44,7 @@ class FollowAvoid(PhysicalEnv):
 
     def _reward(self, agents): 
         self.remove_candidates.clear()  
-        reward = {a:-1 for a  in agents}
+        reward = {a:-1/self.max_timestep for a  in agents}
         for a in agents:
             agent = self.objects['agent'][a]
             for obj_type, obj_list in self.objects.items():
@@ -53,12 +53,12 @@ class FollowAvoid(PhysicalEnv):
                         distance = agent.distance(obj)
                         if (distance < agent.safe_boundary + obj.safe_boundary 
                                             and a not in self.remove_candidates):
-                            reward[a] -= 10
+                            reward[a] -= 2
                             self.remove_candidates.append(a)
             for target in self.objects['target']:
                 distance = agent.distance(target)
                 if 2 < distance < 2.5:
-                    reward[a] +=1
+                    reward[a] +=2/self.max_timestep
         return reward 
 
     def _done(self, agents):
@@ -67,6 +67,8 @@ class FollowAvoid(PhysicalEnv):
             self.objects['agent'][a].remove()
         
         if (sum([v for v in self.done.values()]) >= self.terminal_agent_num):            
+            self.done['__all__'] = True 
+        if self.timestep > self.max_timestep:
             self.done['__all__'] = True 
 
         return self.done 

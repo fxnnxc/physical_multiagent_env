@@ -10,8 +10,8 @@ from ray.rllib.models import ModelCatalog
 from gym.spaces import Discrete, Box, Dict 
 from ray.rllib.env.multi_agent_env import MultiAgentEnv  
 
-from fxnnxc_follower.scenarios.FollowAvoid.scenario import FollowAvoid
-from fxnnxc_follower.reinforcement_learning.utils.observation_functions import Observation_1
+from physical_multiagent_env.scenarios.FollowAvoid.scenario import FollowAvoid
+from physical_multiagent_env.reinforcement_learning.utils.observation_functions import Observation_1
 
 # -----------------------------------------
 # Train With Ray  : you must inherit MultiAgentEnv to train with ray 
