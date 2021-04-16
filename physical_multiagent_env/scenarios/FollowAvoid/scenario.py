@@ -20,11 +20,11 @@ class FollowAvoid(PhysicalEnv):
         self.avoid_intensity = kwargs.get("avoid_intensity", 0.5)
 
     def step(self, agent_action):
-        if self.timestep % 300 == 0:
+        if self.timestep % 200 == 0:
             for object_type, object_list in self.objects.items():
                 for obj in object_list:
                     obj.move_kind = random.choice(self.directions)
-        if self.timestep % 10 == 0:
+        if self.timestep % 50 == 0:
             for target in self.objects['target']:
                 target.move_kind = random.choice(self.directions)
 
