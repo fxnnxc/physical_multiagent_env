@@ -1,5 +1,16 @@
 {
     "env_config":{
+        "agent":{
+            "scaling" : 2,
+            "color" : [125,0,0,1]
+        },
+        "target":{
+            "scaling" : 3
+        },
+        "obstacle":{
+            "scaling" : 4,
+            "color" : [125,125,0,1]
+        },
         "num_agents" : 1,
         "num_obstacles" : 10,
         "num_targets" : 1,

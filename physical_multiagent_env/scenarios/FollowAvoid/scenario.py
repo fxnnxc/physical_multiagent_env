@@ -28,9 +28,10 @@ class FollowAvoid(PhysicalEnv):
 
         for object_type, object_list in self.objects.items():
             for obj in object_list:
-                obj.update()
-                obj.decrease_velocity()
-                obj.clip_velocity()
+                if obj.alive:
+                    obj.update()
+                    obj.decrease_velocity()
+                    obj.clip_velocity()
 
         state ={agent : np.hstack([self.objects['agent'][agent].position,
                                    self.objects['agent'][agent].velocity])
@@ -49,14 +50,9 @@ class FollowAvoid(PhysicalEnv):
         reward = {a:-1/self.max_timestep for a  in agents}
         for a in agents:
             agent = self.objects['agent'][a]
-            for obj_type, obj_list in self.objects.items():
-                if obj_type != "agent":
-                    for obj in obj_list:
-                        distance = agent.distance(obj)
-                        if (distance < agent.safe_boundary + obj.safe_boundary 
-                                            and a not in self.remove_candidates):
-                            reward[a] -= 2
-                            self.remove_candidates.append(a)
+            if p.getContactPoints(agent.pid):
+                reward[a] -= 2
+                self.remove_candidates.append(a)
             for target in self.objects['target']:
                 distance = agent.distance(target)
                 if 1 < distance < 1.2:
@@ -67,7 +63,7 @@ class FollowAvoid(PhysicalEnv):
         for a in set(self.remove_candidates):
             self.done[a] = True 
             self.objects['agent'][a].remove()
-        
+            
         if (sum([v for v in self.done.values()]) >= self.terminal_agent_num):            
             self.done['__all__'] = True 
         if self.timestep > self.max_timestep:
@@ -80,7 +76,27 @@ class FollowAvoid(PhysicalEnv):
 
 import time 
 if __name__ == "__main__":
-    env = FollowAvoid({'connect':p.GUI})
+    config ={
+        "agent":{
+            "scaling" : 2,
+            "color" : [125,0,0,1]
+        },
+        "target":{
+            "scaling" : 3
+        },
+        "obstacle":{
+            "scaling" : 4,
+            "color" : [125,125,0,1]
+        },
+        "num_agents" : 1,
+        "num_obstacles" : 10,
+        "num_targets" : 1,
+        "map_size" : 3,
+        "max_timestep" : 3000,
+        'connect':p.GUI
+    }
+
+    env = FollowAvoid(config)
     env.map_size = 5
     env.num_obstacles = 50
     env.num_agents = 1
@@ -88,5 +104,11 @@ if __name__ == "__main__":
     for i in range(10):
         env.reset()
         for j in range(1000):
-            state, reward, done, info = env.step({i:0 for i in range(env.num_agents)})
-            time.sleep(0.01)
+            alive_agents = []
+            for index, agent in enumerate(env.objects['agent']):
+                if agent.alive:
+                    alive_agents.append(index)
+
+            state, reward, done, info = env.step({i:0 for i in alive_agents})
+            time.sleep(0.1)
+            print(reward)

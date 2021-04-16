@@ -2,17 +2,17 @@ import pybullet as p
 import numpy as np 
 
 class PhysicalObjects:
-    def __init__(self, initial_position, urdf, mass=0.01, scaling=1, **kwargs):
+    def __init__(self, initial_position, **kwargs):
         self.position = initial_position
         self.velocity = [0,0,0]
         self.max_speed = kwargs.get("max_speed", 2)   
         self.acc = kwargs.get("acc", 0.1)
         self.speed_decreasing = 0.999
-        self.pid = p.loadURDF(urdf, initial_position, globalScaling=scaling)
+        self.pid = p.loadURDF(kwargs.get("urdf", "cube_small.urdf"), initial_position, globalScaling=kwargs.get("scaling", 1))
         self.safe_boundary = kwargs.get("safe_boundary", 0.1)
         self.move_kind = "random_direction"
         self.alive = True
-        p.changeDynamics(self.pid, -1, mass=mass)
+        p.changeDynamics(self.pid, -1, mass=kwargs.get("mass", 0.01))
         p.changeVisualShape(self.pid, -1, rgbaColor=kwargs.get("color", [0,0,125,1]))
 
     def move(self, kind, bound, **kwargs):
@@ -81,10 +81,10 @@ from gym.spaces import Discrete, Box, Dict
 class Agent(PhysicalObjects):
     dx = [0, 0, 0, 1,-1]
     dy = [0, 1,-1, 0, 0]
-    def __init__(self, initial_position, urdf, action_size, mass=0.01, scaling=1, **kwargs):
-        super().__init__(initial_position, urdf, mass, scaling, **kwargs)
-        self.action_size = action_size
-        self.action_space = Discrete(action_size)
+    def __init__(self, initial_position, **kwargs):
+        super().__init__(initial_position, **kwargs)
+        self.action_size = kwargs.get('action_size', 6)
+        self.action_space = Discrete(self.action_size)
         self.observation_space = Dict({
                                         'own_position' :Box(low=-np.inf, high=np.inf, shape=(3,)), 
                                         'own_velocity': Box(low=-np.inf, high=np.inf, shape=(3,))

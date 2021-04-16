@@ -14,6 +14,7 @@ generate_random_position = lambda x : np.array([np.random.uniform(-x.map_size, x
 class PhysicalEnv(gym.Env):
     def __init__(self, config={}):
         super().__init__()
+        self.config = config
         p.connect(config.get("connect", p.DIRECT))
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
 
@@ -26,8 +27,7 @@ class PhysicalEnv(gym.Env):
                         'agent':[], 
                         'obstacle':[]}
 
-
-    def build_position(self, obj_type, position=None):
+    def build_position(self, obj_type, position=None, **kwargs):
         if position is None:
             while True:
                 conflict = False 
@@ -42,11 +42,11 @@ class PhysicalEnv(gym.Env):
                 if not conflict:
                     break 
         if obj_type == "target":
-            obj = PhysicalObjects(position, "cube_small.urdf", scaling=2, color=[125,0,0,1])
+            obj = PhysicalObjects(position, **kwargs)
         elif obj_type == "agent":
-            obj = Agent(position, "cube_small.urdf", 6,  scaling=2, color=[0,125,0,1])
+            obj = Agent(position, **kwargs)
         elif obj_type == "obstacle":
-            obj = PhysicalObjects(position, "cube_small.urdf" , scaling=2, color=[0,0,0,1])
+            obj = PhysicalObjects(position, **kwargs)
         self.objects[obj_type].append(obj)
 
     # === simulation ===
@@ -56,13 +56,12 @@ class PhysicalEnv(gym.Env):
                 for obj in object_list:
                     obj.remove()
                 object_list.clear()
-             
         for _ in range(self.num_targets):
-            self.build_position("target")
+            self.build_position("target", **self.config.get("target", None))
         for _ in range(self.num_agents):
-            self.build_position("agent")
+            self.build_position("agent", **self.config.get("agent", None))
         for _ in range(self.num_obstacles):
-            self.build_position("obstacle")
+            self.build_position("obstacle", **self.config.get("obstacle", None))
 
         self.observation_space = Dict({
             i: agent.observation_space for i, agent in enumerate(self.objects['agent'])
