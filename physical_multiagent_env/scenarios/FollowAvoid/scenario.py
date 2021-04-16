@@ -24,7 +24,7 @@ class FollowAvoid(PhysicalEnv):
             for object_type, object_list in self.objects.items():
                 for obj in object_list:
                     obj.move_kind = random.choice(self.directions)
-        if self.timestep % 100 == 0:
+        if self.timestep % 10 == 0:
             for target in self.objects['target']:
                 target.move_kind = random.choice(self.directions)
 
