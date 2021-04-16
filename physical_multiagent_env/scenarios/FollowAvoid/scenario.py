@@ -24,6 +24,9 @@ class FollowAvoid(PhysicalEnv):
             for object_type, object_list in self.objects.items():
                 for obj in object_list:
                     obj.move_kind = random.choice(self.directions)
+        if self.timestep % 100 == 0:
+            for target in self.objects['target']:
+                target.move_kind = random.choice(self.directions)
 
         for agent, action in agent_action.items():
             self.objects['agent'][agent].take_action(action, bound=self.map_size)
