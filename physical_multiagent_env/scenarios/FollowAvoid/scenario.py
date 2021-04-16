@@ -11,7 +11,9 @@ class FollowAvoid(PhysicalEnv):
         self.terminal_agent_num = np.clip(config.get("terminal_agent_num", 10), 1, self.num_agents)
         self.directions = ["x+", "x-", "y+", "y-"] 
         self.follow_intensity = 0.5
-        self.avoid_intensity = 0.5   
+        self.avoid_intensity = 0.5 
+        psetTimeStep(1)  
+        
 
     # Similar to the linear combination
     def set_phase(self, **kwargs):
@@ -85,24 +87,30 @@ class FollowAvoid(PhysicalEnv):
 
 import time 
 if __name__ == "__main__":
-    config ={
-        "agent":{
-            "scaling" : 2,
-            "color" : [125,0,0,1]
+    config = {
+         "agent":{
+            "globalScaling" : 1,
+            "acc" : 1,
+            "max_speed" : 5,
+            "color" : [0,125,0,1]
         },
         "target":{
-            "scaling" : 3
+            "globalScaling" : 2,
+            "acc" : 1,
+            "max_speed" : 2,
+            "color" : [0,0,125,1]
         },
         "obstacle":{
-            "scaling" : 4,
-            "color" : [125,125,0,1]
+            "globalScaling" : 3,
+            "color" : [125,125,125,1],
+            "acc" : 1,
+            "max_speed" : 2
         },
         "num_agents" : 1,
-        "num_obstacles" : 10,
+        "num_obstacles" : 5,
         "num_targets" : 1,
         "map_size" : 3,
-        "max_timestep" : 3000,
-        'connect':p.GUI
+        "max_timestep" : 4000
     }
 
     env = FollowAvoid(config)
@@ -110,6 +118,7 @@ if __name__ == "__main__":
     env.num_obstacles = 50
     env.num_agents = 1
     env.num_targets = 2
+    
     for i in range(10):
         env.reset()
         for j in range(1000):
@@ -119,5 +128,5 @@ if __name__ == "__main__":
                     alive_agents.append(index)
 
             state, reward, done, info = env.step({i:0 for i in alive_agents})
-            time.sleep(0.1)
+            time.sleep(0.01)
             print(reward)
