@@ -20,12 +20,12 @@
 
     "rllib_config":{
         "model" : "PPO",
-        "num_workers" : 1,
+        "num_workers" : 5,
         "num_gpus" : 1,
         "local_dir" : "./checkpoints/",
         "name" : "version1",
         "checkpoint_freq" : 500,
-        "framework" : "tf",
+        "framework" : "torch",
         "stop":{
             "training_iteration" : 500
         },
@@ -33,7 +33,7 @@
             "type": "EpsilonGreedy",
             "initial_epsilon": 1.0,
             "final_epsilon": 0.02,
-            "epsilon_timesteps": 100
+            "epsilon_timesteps": 10000
         }
     }
 }
