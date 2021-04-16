@@ -12,7 +12,6 @@ class FollowAvoid(PhysicalEnv):
         self.directions = ["x+", "x-", "y+", "y-"] 
         self.follow_intensity = 0.5
         self.avoid_intensity = 0.5 
-        psetTimeStep(1)  
         
 
     # Similar to the linear combination
