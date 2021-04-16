@@ -2,14 +2,20 @@
     "env_config":{
         "agent":{
             "globalScaling" : 1,
+            "acc" : 0.3,
+            "max_speed" : 5,
             "color" : [125,0,0,1]
         },
         "target":{
-            "globalScaling" : 2
+            "globalScaling" : 2,
+            "acc" : 0.1,
+            "max_speed" : 2
         },
         "obstacle":{
             "globalScaling" : 3,
-            "color" : [125,125,0,1]
+            "color" : [125,125,0,1],
+            "acc" : 0.1,
+            "max_speed" : 2
         },
         "num_agents" : 1,
         "num_obstacles" : 5,
