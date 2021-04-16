@@ -8,7 +8,8 @@ class PhysicalObjects:
         self.max_speed = kwargs.get("max_speed", 2)   
         self.acc = kwargs.get("acc", 0.1)
         self.speed_decreasing = 0.999
-        self.pid = p.loadURDF(kwargs.get("urdf", "cube_small.urdf"), initial_position, globalScaling=kwargs.get("scaling", 1))
+        self.globalScaling = kwargs.get("globalScaling", 1)
+        self.pid = p.loadURDF(kwargs.get("urdf", "cube_small.urdf"), initial_position, globalScaling=self.globalScaling)
         self.safe_boundary = kwargs.get("safe_boundary", 0.1)
         self.move_kind = "random_direction"
         self.alive = True

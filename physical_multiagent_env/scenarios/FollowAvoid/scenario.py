@@ -51,7 +51,7 @@ class FollowAvoid(PhysicalEnv):
         for a in agents:
             agent = self.objects['agent'][a]
             if p.getContactPoints(agent.pid):
-                reward[a] -= 2
+                reward[a] -= 40/self.max_timestep 
                 self.remove_candidates.append(a)
             for target in self.objects['target']:
                 distance = agent.distance(target)

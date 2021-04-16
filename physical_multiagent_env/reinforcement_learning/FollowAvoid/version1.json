@@ -1,14 +1,14 @@
 {
     "env_config":{
         "agent":{
-            "scaling" : 2,
+            "globalScaling" : 1,
             "color" : [125,0,0,1]
         },
         "target":{
-            "scaling" : 3
+            "globalScaling" : 2
         },
         "obstacle":{
-            "scaling" : 4,
+            "globalScaling" : 3,
             "color" : [125,125,0,1]
         },
         "num_agents" : 1,
@@ -24,10 +24,10 @@
         "num_gpus" : 1,
         "local_dir" : "./checkpoints/",
         "name" : "version1",
-        "checkpoint_freq" : 300,
+        "checkpoint_freq" : 500,
         "framework" :  "torch",
         "stop":{
-            "training_iteration" : 1111
+            "training_iteration" : 500
         },
         "exploration_config": {
             "type": "EpsilonGreedy",
