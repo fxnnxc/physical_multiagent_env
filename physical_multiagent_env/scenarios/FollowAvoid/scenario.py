@@ -9,7 +9,14 @@ class FollowAvoid(PhysicalEnv):
         self.max_timestep = config.get("max_timestep", 10000)
         self.remove_candidates =[]
         self.terminal_agent_num = np.clip(config.get("terminal_agent_num", 10), 1, self.num_agents)
-        self.directions = ["x+", "x-", "y+", "y-"]    
+        self.directions = ["x+", "x-", "y+", "y-"] 
+        self.follow_intensity = 0.5
+        self.avoid_intensity = 0.5   
+
+    # Similar to the linear combination
+    def set_phase(self, **kwargs):
+        self.follow_intensity = kwargs.get("follow_intensity", 0.5)
+        self.avoid_intensity = kwargs.get("avoid_intensity", 0.5)
 
     def step(self, agent_action):
         if self.timestep % 300 == 0:
@@ -51,12 +58,12 @@ class FollowAvoid(PhysicalEnv):
         for a in agents:
             agent = self.objects['agent'][a]
             if p.getContactPoints(agent.pid):
-                reward[a] -= 40/self.max_timestep 
+                reward[a] -= 40/self.max_timestep * self.avoid_intensity
                 self.remove_candidates.append(a)
             for target in self.objects['target']:
                 distance = agent.distance(target)
                 if 1 < distance < 1.2:
-                    reward[a] +=20/self.max_timestep
+                    reward[a] +=20/self.max_timestep * self.follow_intensity 
         return reward 
 
     def _done(self, agents):

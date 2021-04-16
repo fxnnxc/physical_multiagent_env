@@ -25,15 +25,17 @@ class FollowAvoidRay(FollowAvoid, MultiAgentEnv):
         super().__init__(config)
 
 def on_train_result(info):
-    print(info)
     result = info["result"]
-    if result[ 'episode_len_mean'] >   ==0:
-        map_size = 3 + result['training_iteration']/1000* 27
-        direction_period =  map_size * 10 
-        trainer = info["trainer"]   
+    env_config = result['config']['env_config']
+    trainer = info["trainer"]   
+    if result['episode_len_mean'] > env_config['max_timestep']*0.8: # encourage target finding 
         trainer.workers.foreach_worker(
             lambda ev: ev.foreach_env(
-                lambda env: env.set_phase(direction_period=direction_period, map_size=map_size)))
+                lambda env: env.set_phase(follow_intensity=0.9, avoid_intensity=0.1 )))
+    else: # encourage obstacle avoidance
+        trainer.workers.foreach_worker(
+            lambda ev: ev.foreach_env(
+                lambda env: env.set_phase(follow_intensity=0.1, avoid_intensity=0.9)))
 
 
 if __name__ == '__main__':
@@ -43,12 +45,11 @@ if __name__ == '__main__':
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--checkpoint", type=str)
     args = parser.parse_args()
-
+e
     with open("version1.json") as f :
         general_config = json.load(f)
         rllib_config = general_config['rllib_config']
         env_config = general_config['env_config']
-
 
     ray.init()
     register_env("FollowAvoidRay", lambda config:FollowAvoidRay(config))
@@ -68,6 +69,7 @@ if __name__ == '__main__':
             "observation_fn" : Observation_1.observation_fn_1
         },
         'framework' : rllib_config['framework'],
+        "callbacks":{"on_train_result":on_train_result}
     }
 
     if not args.test:
