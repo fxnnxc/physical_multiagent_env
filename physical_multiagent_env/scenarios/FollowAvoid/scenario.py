@@ -87,6 +87,7 @@ class FollowAvoid(PhysicalEnv):
 import time 
 if __name__ == "__main__":
     config = {
+        "connect" : p.GUI,
          "agent":{
             "globalScaling" : 1,
             "acc" : 1,
