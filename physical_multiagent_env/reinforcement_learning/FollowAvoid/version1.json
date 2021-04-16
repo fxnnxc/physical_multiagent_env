@@ -12,15 +12,15 @@
             "color" : [125,125,0,1]
         },
         "num_agents" : 1,
-        "num_obstacles" : 10,
+        "num_obstacles" : 5,
         "num_targets" : 1,
         "map_size" : 3,
-        "max_timestep" : 3000
+        "max_timestep" : 1000
     },
 
     "rllib_config":{
         "model" : "PPO",
-        "num_workers" : 1,
+        "num_workers" : 10,
         "num_gpus" : 1,
         "local_dir" : "./checkpoints/",
         "name" : "version1",

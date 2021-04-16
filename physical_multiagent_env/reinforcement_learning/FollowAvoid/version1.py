@@ -24,6 +24,17 @@ class FollowAvoidRay(FollowAvoid, MultiAgentEnv):
     def __init__(self, config={}):
         super().__init__(config)
 
+def on_train_result(info):
+    print(info)
+    result = info["result"]
+    if result[ 'episode_len_mean'] >   ==0:
+        map_size = 3 + result['training_iteration']/1000* 27
+        direction_period =  map_size * 10 
+        trainer = info["trainer"]   
+        trainer.workers.foreach_worker(
+            lambda ev: ev.foreach_env(
+                lambda env: env.set_phase(direction_period=direction_period, map_size=map_size)))
+
 
 if __name__ == '__main__':
     
