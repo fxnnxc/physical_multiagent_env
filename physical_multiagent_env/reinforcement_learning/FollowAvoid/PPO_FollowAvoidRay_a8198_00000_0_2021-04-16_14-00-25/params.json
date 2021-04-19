@@ -1,0 +1,52 @@
+{
+  "callbacks": {
+    "on_train_result": "<function on_train_result at 0x7f62da437e18>"
+  },
+  "env": "FollowAvoidRay",
+  "env_config": {
+    "agent": {
+      "color": [
+        125,
+        0,
+        0,
+        1
+      ],
+      "globalScaling": 1
+    },
+    "map_size": 3,
+    "max_timestep": 1000,
+    "num_agents": 1,
+    "num_obstacles": 5,
+    "num_targets": 1,
+    "obstacle": {
+      "color": [
+        125,
+        125,
+        0,
+        1
+      ],
+      "globalScaling": 3
+    },
+    "target": {
+      "globalScaling": 2
+    }
+  },
+  "framework": "torch",
+  "multiagent": {
+    "observation_fn": "<function Observation_1.observation_fn_1 at 0x7f60b5c20ae8>",
+    "policies": {
+      "pol": [
+        null,
+        "Dict(8x8_observation:Box(-inf, inf, (8, 8), float32), target_relative_position_0:Box(-inf, inf, (3,), float32), target_relative_velocity_0:Box(-inf, inf, (3,), float32))",
+        "Discrete(6)",
+        {}
+      ]
+    },
+    "policies_to_train": [
+      "pol"
+    ],
+    "policy_mapping_fn": "<function <lambda> at 0x7f60b4d5b158>"
+  },
+  "num_gpus": 1,
+  "num_workers": 5
+}

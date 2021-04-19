@@ -2,26 +2,30 @@
     "env_config":{
         "agent":{
             "globalScaling" : 1,
+<<<<<<< HEAD
             "acc" : 1.5,
+=======
+            "acc" : 2,
+>>>>>>> ea4d0b0fddc2478b54db82535f2c941dba0b3010
             "max_speed" : 5,
             "color" : [0,125,0,1]
         },
         "target":{
             "globalScaling" : 2,
-            "acc" : 1,
+            "acc" : 0.3,
             "max_speed" : 2,
             "color" : [0,0,125,1]
         },
         "obstacle":{
             "globalScaling" : 3,
             "color" : [125,125,125,1],
-            "acc" : 1,
+            "acc" : 0.0001,
             "max_speed" : 2
         },
         "num_agents" : 1,
         "num_obstacles" : 5,
         "num_targets" : 1,
-        "map_size" : 3,
+        "map_size" : 2,
         "max_timestep" : 4000
     },
 
