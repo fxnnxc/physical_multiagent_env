@@ -93,38 +93,34 @@ if __name__ == "__main__":
         "connect" : p.GUI,
          "agent":{
             "globalScaling" : 1,
-            "acc" : 1,
+            "acc" : 2,
             "max_speed" : 5,
             "color" : [0,125,0,1]
         },
         "target":{
             "globalScaling" : 2,
-            "acc" : 1,
+            "acc" : 0.3,
             "max_speed" : 2,
             "color" : [0,0,125,1]
         },
         "obstacle":{
             "globalScaling" : 3,
             "color" : [125,125,125,1],
-            "acc" : 1,
+            "acc" : 0.0001,
             "max_speed" : 2
         },
         "num_agents" : 1,
         "num_obstacles" : 5,
         "num_targets" : 1,
-        "map_size" : 3,
+        "map_size" : 2,
         "max_timestep" : 4000
     }
 
     env = FollowAvoid(config)
-    env.map_size = 5
-    env.num_obstacles = 50
-    env.num_agents = 1
-    env.num_targets = 2
     
     for i in range(10):
         env.reset()
-        for j in range(1000):
+        for j in range(2000):
             alive_agents = []
             for index, agent in enumerate(env.objects['agent']):
                 if agent.alive:
