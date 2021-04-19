@@ -2,7 +2,7 @@
     "env_config":{
         "agent":{
             "globalScaling" : 1,
-            "acc" : 1,
+            "acc" : 1.5,
             "max_speed" : 5,
             "color" : [0,125,0,1]
         },
