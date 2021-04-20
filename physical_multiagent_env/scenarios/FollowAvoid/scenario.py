@@ -10,8 +10,8 @@ class FollowAvoid(PhysicalEnv):
         self.remove_candidates =[]
         self.terminal_agent_num = np.clip(config.get("terminal_agent_num", 10), 1, self.num_agents)
         self.directions = ["x+", "x-", "y+", "y-"] 
-        self.follow_intensity = 0.5
-        self.avoid_intensity = 0.5 
+        self.follow_intensity = 1
+        self.avoid_intensity = 1
         
 
     # Similar to the linear combination
@@ -60,11 +60,11 @@ class FollowAvoid(PhysicalEnv):
         for a in agents:
             agent = self.objects['agent'][a]
             if p.getContactPoints(agent.pid):
-                reward[a] -= 1 * self.avoid_intensity
+                reward[a] -= 10/self.max_timestep * self.avoid_intensity
                 self.remove_candidates.append(a)
             for target in self.objects['target']:
                 distance = agent.distance(target)
-                if 1 < distance < 1.2:
+                if 8 < distance < 1:
                     reward[a] += 1/self.max_timestep * self.follow_intensity 
                 else:
                     reward[a] += -1/self.max_timestep * self.follow_intensity 

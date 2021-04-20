@@ -31,11 +31,11 @@ def on_train_result(info):
     if result['episode_len_mean'] > env_config['max_timestep']*0.98: # encourage target finding 
         trainer.workers.foreach_worker(
             lambda ev: ev.foreach_env(
-                lambda env: env.set_phase(follow_intensity=0.9, avoid_intensity=0.1 )))
+                lambda env: env.set_phase(follow_intensity=0.9, avoid_intensity=0.5 )))
     else: # encourage obstacle avoidance
         trainer.workers.foreach_worker(
             lambda ev: ev.foreach_env(
-                lambda env: env.set_phase(follow_intensity=0.1, avoid_intensity=0.9)))
+                lambda env: env.set_phase(follow_intensity=0.1, avoid_intensity=0.5)))
 
 
 if __name__ == '__main__':
@@ -46,7 +46,7 @@ if __name__ == '__main__':
     parser.add_argument("--checkpoint", type=str)
     args = parser.parse_args()
 
-    with open("version1.json") as f :
+    with open("version2.json") as f :
         general_config = json.load(f)
         rllib_config = general_config['rllib_config']
         env_config = general_config['env_config']
@@ -62,11 +62,11 @@ if __name__ == '__main__':
         "env_config": env_config,
         "multiagent":{
             "policies":{
-                f"pol" : (None, observation.observation_space, Discrete(5) , {}) 
+                f"pol" : (None, observation.observation_space2, Discrete(5) , {}) 
             },
             "policy_mapping_fn": lambda i : "pol",
             "policies_to_train":["pol"],
-            "observation_fn" : Observation_1.observation_fn_1
+            "observation_fn" : Observation_1.observation_fn_2
         },
         'framework' : rllib_config['framework'],
         #"callbacks":{"on_train_result":on_train_result}
