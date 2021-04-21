@@ -85,34 +85,13 @@ class FollowAvoid(PhysicalEnv):
     def _info(self):
         return {}
 
-import time 
+import time
+import json 
 if __name__ == "__main__":
-    config = {
-        "connect" : p.GUI,
-         "agent":{
-            "globalScaling" : 1,
-            "acc" : 2,
-            "max_speed" : 5,
-            "color" : [0,125,0,1]
-        },
-        "target":{
-            "globalScaling" : 2,
-            "acc" : 0.3,
-            "max_speed" : 2,
-            "color" : [0,0,125,1]
-        },
-        "obstacle":{
-            "globalScaling" : 3,
-            "color" : [125,125,125,1],
-            "acc" : 0.0001,
-            "max_speed" : 2
-        },
-        "num_agents" : 1,
-        "num_obstacles" : 5,
-        "num_targets" : 1,
-        "map_size" : 2,
-        "max_timestep" : 4000
-    }
+    with open("../../reinforcement_learning/FollowAvoid/version1.json") as f :
+        config = json.load(f)
+
+    config = config['env_config']
 
     env = FollowAvoid(config)
     
