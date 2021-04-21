@@ -23,15 +23,15 @@
         "num_targets" : 1,
         "map_size" : 4,
         "max_timestep" : 3000,
-        "curriculum_learning":2
+        "curriculum_learning":1
     },
 
     "rllib_config":{
-        "model" : "PPO",
-        "num_workers" : 10,
+        "model" : "DQN",
+        "num_workers" : 5,
         "num_gpus" : 1,
         "local_dir" : "./checkpoints/curriculum_learning",
-        "name" : "curriculum_3",
+        "name" : "curriculum_2_DQN",
         "checkpoint_freq" : 1000,
         "framework" : "torch",
         "stop":{
