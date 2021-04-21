@@ -12,6 +12,7 @@ class FollowAvoid(PhysicalEnv):
         self.directions = ["x+", "x-", "y+", "y-"] 
         self.follow_intensity = 1
         self.avoid_intensity = 1
+        p.setTimeStep(0.01)
         
 
     # Similar to the linear combination
@@ -24,7 +25,7 @@ class FollowAvoid(PhysicalEnv):
             for object_type, object_list in self.objects.items():
                 for obj in object_list:
                     obj.move_kind = random.choice(self.directions)
-        if self.timestep % 100 == 0:
+        if self.timestep % 200 == 0:
             for target in self.objects['target']:
                 target.move_kind = random.choice(self.directions)
 
