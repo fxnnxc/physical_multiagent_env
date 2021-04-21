@@ -32,9 +32,9 @@ def on_train_result(info):
     training_iteration =  1000
 
     # curriculum : [obstacle, training_iteration]
-    curriculum = [[10], [0], 
-                  [i for i  in range(1, 11)], [100*i for i in range(10)], 
-                  [1, 5, 10], [0, 300, 600]]
+    curriculum = [[[10], [0]], 
+                  [[i for i  in range(1, 11)], [i for i in range(10)]], 
+                  [[1, 5, 10], [0, 300, 600]]]
 
 
     c = env_config['curriculum_learning']
@@ -44,7 +44,6 @@ def on_train_result(info):
             trainer.workers.foreach_worker(
                 lambda ev: ev.foreach_env(
                     lambda env: env.set_phase(num_obstacles=obstacle)))
-
 
 if __name__ == '__main__':
     
@@ -77,7 +76,7 @@ if __name__ == '__main__':
             "observation_fn" : Observation_1.observation_fn_1
         },
         'framework' : rllib_config['framework'],
-        #"callbacks":{"on_train_result":on_train_result}
+        "callbacks":{"on_train_result":on_train_result}
     }
 
     if not args.test:

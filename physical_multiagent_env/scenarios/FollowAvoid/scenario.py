@@ -20,6 +20,10 @@ class FollowAvoid(PhysicalEnv):
         self.follow_intensity = kwargs.get("follow_intensity", 0.5)
         self.avoid_intensity = kwargs.get("avoid_intensity", 0.5)
         self.num_obstacles = kwargs.get("num_obstacles", 10)
+        print("--------------------------------")
+        print(self.num_obstacles)
+        print("--------------------------------")
+
 
     def step(self, agent_action):
         if self.timestep % 200 == 0:
