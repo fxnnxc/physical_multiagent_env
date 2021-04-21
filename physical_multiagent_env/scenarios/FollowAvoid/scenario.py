@@ -103,6 +103,6 @@ if __name__ == "__main__":
                 if agent.alive:
                     alive_agents.append(index)
 
-            state, reward, done, info = env.step({i:0 for i in alive_agents})
+            state, reward, done, info = env.step({i:1 for i in alive_agents})
             time.sleep(0.01)
             print(reward)
