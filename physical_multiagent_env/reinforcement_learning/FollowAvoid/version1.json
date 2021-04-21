@@ -22,15 +22,16 @@
         "num_obstacles" : 10,
         "num_targets" : 1,
         "map_size" : 4,
-        "max_timestep" : 3000
+        "max_timestep" : 3000,
+        "curriculum_learning":2
     },
 
     "rllib_config":{
         "model" : "PPO",
         "num_workers" : 10,
         "num_gpus" : 1,
-        "local_dir" : "./checkpoints/",
-        "name" : "curriculum_learning",
+        "local_dir" : "./checkpoints/curriculum_learning",
+        "name" : "curriculum_3",
         "checkpoint_freq" : 1000,
         "framework" : "torch",
         "stop":{

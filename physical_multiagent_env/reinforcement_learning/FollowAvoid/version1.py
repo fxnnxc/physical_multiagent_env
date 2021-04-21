@@ -31,14 +31,15 @@ def on_train_result(info):
 
     training_iteration =  1000
 
-    type1, iter1 = [10], [0]
-    type2, iter2 = [i for i  in range(1, 11)], [100*i for i in range(10)]
-    type3, iter3 = [1, 5, 10], [0, 300, 600]
+    # curriculum : [obstacle, training_iteration]
+    curriculum = [[10], [0], 
+                  [i for i  in range(1, 11)], [100*i for i in range(10)], 
+                  [1, 5, 10], [0, 300, 600]]
 
-    curriculum_type = type1
-    iterations = iter1
 
-    for obstacle, iteration in zip(curriculum_type, iterations):
+    c = env_config['curriculum_learning']
+
+    for obstacle, iteration in zip(curriculum[c][0], curriculum[c][1]):
         if result['training_iteration'] > iteration:
             trainer.workers.foreach_worker(
                 lambda ev: ev.foreach_env(

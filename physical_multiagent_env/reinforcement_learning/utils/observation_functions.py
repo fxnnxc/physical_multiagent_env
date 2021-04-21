@@ -8,9 +8,11 @@ class Observation_1:
     """
     def __init__(self, num_targets):
 
+        
         self.observation_space = {f'target_relative_position_{i}': Box(low=-np.inf, high=np.inf, shape=(3,)) for i in range(num_targets)}
         self.observation_space.update({f'target_relative_velocity_{i}': Box(low=-np.inf, high=np.inf, shape=(3,)) for i in range(num_targets)})
         self.observation_space.update({'obstacle_observation' :Box(low=-np.inf, high=np.inf, shape=(8,8))})
+        self.observation_space.update({"own_velocity" : Box(low=-np.inf, high=np.inf, shape=(3,))})
         self.observation_space = Dict(self.observation_space)
 
         self.observation_space2 = {f'target_relative_position_{i}': Box(low=-np.inf, high=np.inf, shape=(3,)) for i in range(num_targets)}
@@ -24,6 +26,7 @@ class Observation_1:
 
         for a in agent_obs.keys():
             agent = env.objects['agent'][a]
+            new_obs[a]['own_velocity'] = clipping(np.array(agent.velocity), 4)
             for i, target in enumerate(env.objects['target']):
                 new_obs[a][f'target_relative_position_{i}'] = clipping(agent.relative_position(target), 4)
                 new_obs[a][f'target_relative_velocity_{i}'] = clipping(agent.relative_velocity(target), 4)
