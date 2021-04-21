@@ -2,8 +2,8 @@
     "env_config":{
         "agent":{
             "globalScaling" : 1,
-            "acc" : 2,
-            "max_speed" : 5,
+            "acc" : 0.5,
+            "max_speed" : 3,
             "color" : [0,125,0,1]
         },
         "target":{
@@ -13,33 +13,33 @@
             "color" : [0,0,125,1]
         },
         "obstacle":{
-            "globalScaling" : 3,
+            "globalScaling" : 2,
             "color" : [125,125,125,1],
             "acc" : 0.0001,
             "max_speed" : 2
         },
         "num_agents" : 1,
-        "num_obstacles" : 5,
+        "num_obstacles" : 10,
         "num_targets" : 1,
-        "map_size" : 2,
-        "max_timestep" : 4000
+        "map_size" : 3,
+        "max_timestep" : 3000
     },
 
     "rllib_config":{
         "model" : "PPO",
-        "num_workers" : 5,
+        "num_workers" : 10,
         "num_gpus" : 1,
         "local_dir" : "./checkpoints/",
-        "name" : "version1",
-        "checkpoint_freq" : 500,
+        "name" : "curriculum_learning",
+        "checkpoint_freq" : 1000,
         "framework" : "torch",
         "stop":{
-            "training_iteration" : 500
+            "training_iteration" : 1000
         },
         "exploration_config": {
             "type": "EpsilonGreedy",
             "initial_epsilon": 1.0,
-            "final_epsilon": 0.02,
+            "final_epsilon": 0.05,
             "epsilon_timesteps": 10000
         }
     }

@@ -62,14 +62,14 @@ if __name__ == '__main__':
         "env_config": env_config,
         "multiagent":{
             "policies":{
-                f"pol" : (None, observation.observation_space, Discrete(6) , {}) 
+                f"pol" : (None, observation.observation_space, Discrete(5) , {}) 
             },
             "policy_mapping_fn": lambda i : "pol",
             "policies_to_train":["pol"],
             "observation_fn" : Observation_1.observation_fn_1
         },
         'framework' : rllib_config['framework'],
-        "callbacks":{"on_train_result":on_train_result}
+        #"callbacks":{"on_train_result":on_train_result}
     }
 
     if not args.test:

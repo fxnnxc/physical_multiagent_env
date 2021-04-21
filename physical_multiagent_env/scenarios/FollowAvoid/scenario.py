@@ -10,8 +10,8 @@ class FollowAvoid(PhysicalEnv):
         self.remove_candidates =[]
         self.terminal_agent_num = np.clip(config.get("terminal_agent_num", 10), 1, self.num_agents)
         self.directions = ["x+", "x-", "y+", "y-"] 
-        self.follow_intensity = 0.5
-        self.avoid_intensity = 0.5 
+        self.follow_intensity = 1
+        self.avoid_intensity = 1
         
 
     # Similar to the linear combination
@@ -24,7 +24,7 @@ class FollowAvoid(PhysicalEnv):
             for object_type, object_list in self.objects.items():
                 for obj in object_list:
                     obj.move_kind = random.choice(self.directions)
-        if self.timestep % 50 == 0:
+        if self.timestep % 100 == 0:
             for target in self.objects['target']:
                 target.move_kind = random.choice(self.directions)
 
@@ -60,12 +60,11 @@ class FollowAvoid(PhysicalEnv):
         for a in agents:
             agent = self.objects['agent'][a]
             if p.getContactPoints(agent.pid):
-                reward[a] +=  -10/self.max_timestep * self.avoid_intensity
+                reward[a] -= 10/self.max_timestep * self.avoid_intensity
                 self.remove_candidates.append(a)
             for target in self.objects['target']:
                 distance = agent.distance(target)
-                print(distance)
-                if 0.8 < distance < 1:
+                if 8 < distance < 1:
                     reward[a] += 1/self.max_timestep * self.follow_intensity 
                 else:
                     reward[a] += -1/self.max_timestep * self.follow_intensity 
@@ -86,34 +85,13 @@ class FollowAvoid(PhysicalEnv):
     def _info(self):
         return {}
 
-import time 
+import time
+import json 
 if __name__ == "__main__":
-    config = {
-        "connect" : p.GUI,
-         "agent":{
-            "globalScaling" : 1,
-            "acc" : 2,
-            "max_speed" : 5,
-            "color" : [0,125,0,1]
-        },
-        "target":{
-            "globalScaling" : 2,
-            "acc" : 0.3,
-            "max_speed" : 2,
-            "color" : [0,0,125,1]
-        },
-        "obstacle":{
-            "globalScaling" : 3,
-            "color" : [125,125,125,1],
-            "acc" : 0.0001,
-            "max_speed" : 2
-        },
-        "num_agents" : 1,
-        "num_obstacles" : 5,
-        "num_targets" : 1,
-        "map_size" : 2,
-        "max_timestep" : 4000
-    }
+    with open("../../reinforcement_learning/FollowAvoid/version1.json") as f :
+        config = json.load(f)
+
+    config = config['env_config']
 
     env = FollowAvoid(config)
     
