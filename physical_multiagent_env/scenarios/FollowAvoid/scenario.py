@@ -12,19 +12,21 @@ class FollowAvoid(PhysicalEnv):
         self.directions = ["x+", "x-", "y+", "y-"] 
         self.follow_intensity = 1
         self.avoid_intensity = 1
+        p.setTimeStep(0.01)
         
 
     # Similar to the linear combination
     def set_phase(self, **kwargs):
         self.follow_intensity = kwargs.get("follow_intensity", 0.5)
         self.avoid_intensity = kwargs.get("avoid_intensity", 0.5)
+        self.num_obstacles = kwargs.get("num_obstacles", 10)
 
     def step(self, agent_action):
         if self.timestep % 200 == 0:
             for object_type, object_list in self.objects.items():
                 for obj in object_list:
                     obj.move_kind = random.choice(self.directions)
-        if self.timestep % 100 == 0:
+        if self.timestep % 200 == 0:
             for target in self.objects['target']:
                 target.move_kind = random.choice(self.directions)
 
@@ -92,6 +94,7 @@ if __name__ == "__main__":
         config = json.load(f)
 
     config = config['env_config']
+    config['connect'] = p.GUI
 
     env = FollowAvoid(config)
     

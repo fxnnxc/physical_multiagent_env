@@ -27,15 +27,22 @@ class FollowAvoidRay(FollowAvoid, MultiAgentEnv):
 def on_train_result(info):
     result = info["result"]
     env_config = result['config']['env_config']
-    trainer = info["trainer"]   
-    if result['episode_len_mean'] > env_config['max_timestep']*0.98: # encourage target finding 
-        trainer.workers.foreach_worker(
-            lambda ev: ev.foreach_env(
-                lambda env: env.set_phase(follow_intensity=0.9, avoid_intensity=0.1 )))
-    else: # encourage obstacle avoidance
-        trainer.workers.foreach_worker(
-            lambda ev: ev.foreach_env(
-                lambda env: env.set_phase(follow_intensity=0.1, avoid_intensity=0.9)))
+    trainer = info["trainer"]
+
+    training_iteration =  1000
+
+    type1, iter1 = [10], [0]
+    type2, iter2 = [i for i  in range(1, 11)], [100*i for i in range(10)]
+    type3, iter3 = [1, 5, 10], [0, 300, 600]
+
+    curriculum_type = type1
+    iterations = iter1
+
+    for obstacle, iteration in zip(curriculum_type, iterations):
+        if result['training_iteration'] > iteration:
+            trainer.workers.foreach_worker(
+                lambda ev: ev.foreach_env(
+                    lambda env: env.set_phase(num_obstacles=obstacle)))
 
 
 if __name__ == '__main__':
