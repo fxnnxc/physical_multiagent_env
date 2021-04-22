@@ -23,19 +23,29 @@
         "num_targets" : 1,
         "map_size" : 4,
         "max_timestep" : 3000,
-        "curriculum_learning":1
+        "curriculum_learning":1,
+        "observation_range" : 3
+
     },
 
     "rllib_config":{
-        "model" : "DQN",
-        "num_workers" : 5,
-        "num_gpus" : 1,
-        "local_dir" : "./checkpoints/curriculum_learning",
-        "name" : "curriculum_2_DQN",
+        "policy" : "DQN",
+        "model":{"custom_model" : "visionnet", 
+                 "dim": 42, 
+                 "conv_filters": [
+                                  [16, [4, 4], 2], 
+                                  [32, [4, 4], 2], 
+                                  [512, [11, 11], 1]
+                                 ]
+                },
+        "num_workers" : 1,
+        "num_gpus" : 0,
+        "local_dir" : "./checkpoints/cnn",
+        "name" : "test",
         "checkpoint_freq" : 1000,
         "framework" : "torch",
         "stop":{
-            "training_iteration" : 1000
+            "training_iteration" : 10
         },
         "exploration_config": {
             "type": "EpsilonGreedy",

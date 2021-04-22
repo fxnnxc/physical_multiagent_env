@@ -118,6 +118,12 @@ class Agent(PhysicalObjects):
         relative = np.array([other.velocity[i] - self.velocity[i] for i in range(3)])
         return relative
 
-    def distance(self, other):
-        return np.linalg.norm(self.relative_position(other))
+    def distance(self, other, measure="euclidian"):
+        if measure == "euclidian":
+            return np.linalg.norm(self.relative_position(other))
+        elif measure == "manhatton":
+            return np.linalg.norm(self.relative_position(other), ord=1)
+        else:
+            raise ValueError()
+
 
