@@ -65,46 +65,39 @@ class Observation_1:
 
 class Observation_CNN:
     def __init__(self, num_targets, size, observation_range=2):
-        self.observation_space = {"observation": Box(low=-np.inf, high=np.inf, shape=(size, size, 4))}
-        self.observation_space = Dict(self.observation_space)
+        self.observation_space =Box(low=-np.inf, high=np.inf, shape=(size, size, 4))
         self.size = size 
         self.observation_range = observation_range
 
     def observation_fn_1(agent_obs, test_env=None, **kw):
 
-        print(kw['worker'])
-        print(dir(kw['worker']))
-        print(kw.keys())
-        print()
-
-        assert False 
-
         env= test_env if test_env else kw['worker'].env
         
+        size = kw['worker'].policy_config['env_config']['cnn_size']
+        observation_range =kw['worker'].policy_config['env_config']['observation_range'] #env.observation_range
+        new_obs = {a:np.zeros((size, size, 4)) for a in agent_obs.keys()}
 
-        new_obs = {a:{} for a in agent_obs.keys()}
-        size =kw['worker'].policy_config['env_config']
-        observation_range = env.observation_range
 
         for a in agent_obs.keys():
             agent = env.objects['agent'][a]
-            for i, target in enumerate(env.objects['target']):
-                new_obs[a]['observation'] = np.zeros((size, size, 4))
+            # for i, target in enumerate(env.objects['target']):
+            #     # new_obs[a]['observation'] = 
+            #     pass
+            for obj_type, obj_list in env.objects.items():
+                for obj in  obj_list:
+                    distance = agent.distance(obj, measure="manhattan")
+                    if distance < observation_range:
+                        position = np.ceil(transform(agent.relative_position(obj), size, observation_range))
+                        position = position.astype(int)
 
-            for obj in  env.objects['obstacle']:
-                distance = agent.distance(obj, measure="mahattan")
-                if distance < observation_range:
-                    position = np.ceil(transform(agent.relative_position(obj), size, observation_range))
-                    position = position.astype(int)
-                    new_obs[a]['observation'][position[0], position[1]][1:] = agent.relative_velocity(obj)
-                    new_obs[a]['observation'][position[0], position[1]][0] = obj.globalScaling
-
+                        new_obs[a][position[0], position[1], 1:] = agent.relative_velocity(obj)
+                        new_obs[a][position[0], position[1], 0] = obj.globalScaling
 
         return new_obs
 
 
 def transform(array, size, observation_range):
-    return array * (size//2) / observation_range  + (size//2)
+    return np.clip(array * (size//2) / observation_range  + (size//2),0, size-1)
 
 
 def dangerous_degree(position, velocity, globalScaling):

@@ -24,7 +24,8 @@
         "map_size" : 4,
         "max_timestep" : 3000,
         "curriculum_learning":1,
-        "observation_range" : 3
+        "observation_range" : 3,
+        "cnn_size" : 42
 
     },
 

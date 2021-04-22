@@ -121,7 +121,7 @@ class Agent(PhysicalObjects):
     def distance(self, other, measure="euclidian"):
         if measure == "euclidian":
             return np.linalg.norm(self.relative_position(other))
-        elif measure == "manhatton":
+        elif measure == "manhattan":
             return np.linalg.norm(self.relative_position(other), ord=1)
         else:
             raise ValueError()
