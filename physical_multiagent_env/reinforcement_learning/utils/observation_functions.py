@@ -75,21 +75,17 @@ class Observation_CNN:
         
         size = kw['worker'].policy_config['env_config']['cnn_size']
         observation_range =kw['worker'].policy_config['env_config']['observation_range'] #env.observation_range
-        new_obs = {a:np.zeros((size, size, 4)) for a in agent_obs.keys()}
 
+        new_obs = {a:np.zeros((size, size, 4)) for a in agent_obs.keys()}
 
         for a in agent_obs.keys():
             agent = env.objects['agent'][a]
-            # for i, target in enumerate(env.objects['target']):
-            #     # new_obs[a]['observation'] = 
-            #     pass
             for obj_type, obj_list in env.objects.items():
                 for obj in  obj_list:
                     distance = agent.distance(obj, measure="manhattan")
                     if distance < observation_range:
                         position = np.ceil(transform(agent.relative_position(obj), size, observation_range))
                         position = position.astype(int)
-
                         new_obs[a][position[0], position[1], 1:] = agent.relative_velocity(obj)
                         new_obs[a][position[0], position[1], 0] = obj.globalScaling
 

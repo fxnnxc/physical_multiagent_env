@@ -62,14 +62,14 @@ class FollowAvoid(PhysicalEnv):
         for a in agents:
             agent = self.objects['agent'][a]
             if p.getContactPoints(agent.pid):
-                reward[a] -= 10/self.max_timestep * self.avoid_intensity
+                reward[a] -= 1000/self.max_timestep * self.avoid_intensity
                 self.remove_candidates.append(a)
             for target in self.objects['target']:
                 distance = agent.distance(target)
-                if 8 < distance < 1:
+                if 0.8 < distance < 1:
                     reward[a] += 1/self.max_timestep * self.follow_intensity 
-                else:
-                    reward[a] += -1/self.max_timestep * self.follow_intensity 
+                # else:
+                #     reward[a] += -1/self.max_timestep * self.follow_intensity 
         return reward 
 
     def _done(self, agents):

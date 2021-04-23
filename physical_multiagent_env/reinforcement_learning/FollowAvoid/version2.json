@@ -2,7 +2,7 @@
     "env_config":{
         "agent":{
             "globalScaling" : 1,
-            "acc" : 0.8,
+            "acc" : 1.0,
             "max_speed" : 4,
             "color" : [0,125,0,1]
         },
@@ -23,7 +23,7 @@
         "num_targets" : 1,
         "map_size" : 4,
         "max_timestep" : 3000,
-        "curriculum_learning":1,
+        "curriculum_learning":0,
         "observation_range" : 3,
         "cnn_size" : 42
 
@@ -39,20 +39,20 @@
                                   [512, [11, 11], 1]
                                  ]
                 },
-        "num_workers" : 1,
-        "num_gpus" : 0,
+        "num_workers" : 10,
+        "num_gpus" : 1,
         "local_dir" : "./checkpoints/cnn",
-        "name" : "test",
-        "checkpoint_freq" : 1000,
+        "name" : "CNN_1",
+        "checkpoint_freq" : 10000,
         "framework" : "torch",
         "stop":{
-            "training_iteration" : 10
+            "training_iteration" : 10000
         },
         "exploration_config": {
             "type": "EpsilonGreedy",
             "initial_epsilon": 1.0,
             "final_epsilon": 0.05,
-            "epsilon_timesteps": 10000
+            "epsilon_timesteps": 20000
         }
     }
 }
