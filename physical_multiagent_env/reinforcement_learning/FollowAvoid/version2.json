@@ -39,7 +39,7 @@
                                   [512, [11, 11], 1]
                                  ]
                 },
-        "num_workers" : 10,
+        "num_workers" : 5,
         "num_gpus" : 1,
         "local_dir" : "./checkpoints/cnn",
         "name" : "CNN_1",

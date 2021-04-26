@@ -12,7 +12,7 @@ class FollowAvoid(PhysicalEnv):
         self.directions = ["x+", "x-", "y+", "y-"] 
         self.follow_intensity = 1
         self.avoid_intensity = 1
-        p.setTimeStep(0.01)
+        p.setTimeStep(config.get("pybullet_timestep", 0.01))
         
 
     # Similar to the linear combination

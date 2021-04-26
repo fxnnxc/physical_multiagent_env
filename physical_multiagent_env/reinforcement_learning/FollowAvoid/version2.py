@@ -67,7 +67,7 @@ if __name__ == '__main__':
     ray.init()
     register_env("FollowAvoidRay", lambda config:FollowAvoidRay(config))
 
-    observation = Observation_CNN(num_targets=1, size=42, observation_range=2)
+    observation = Observation_CNN(num_targets=1, size=42, observation_range=3)
     config = {
         "env" : "FollowAvoidRay",
         "num_workers" : rllib_config['num_workers']  ,
@@ -85,6 +85,8 @@ if __name__ == '__main__':
         'framework' : rllib_config['framework'],
         "callbacks":{"on_train_result":on_train_result}
     }
+
+    config['env_config']['pybullet_timestep'] =  tune.grid_search([0.001, 0.01, 0.1, 1.0]) 
 
     if not args.test:
         if args.resume:
