@@ -8,7 +8,7 @@
         },
         "target":{
             "globalScaling" : 2,
-            "acc" : 0.1,
+            "acc" : 0.8,
             "max_speed" : 2,
             "color" : [0,0,125,1]
         },
@@ -23,13 +23,15 @@
         "num_targets" : 1,
         "map_size" : 4,
         "max_timestep" : 3000,
-        "curriculum_learning":1
+        "curriculum_learning":1,
+        "observation_range" : 10,
+        "cnn_size" : 42
     },
 
     "rllib_config":{
         "model" : "DQN",
-        "num_workers" : 5,
-        "num_gpus" : 1,
+        "num_workers" : 1,
+        "num_gpus" : 0,
         "local_dir" : "./checkpoints/curriculum_learning",
         "name" : "curriculum_2_DQN",
         "checkpoint_freq" : 1000,

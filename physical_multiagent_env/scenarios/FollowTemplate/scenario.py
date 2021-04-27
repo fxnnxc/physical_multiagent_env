@@ -23,8 +23,8 @@ class FollowTemplate(PhysicalEnv):
         self.avoid_intensity = 1
         
         p.setTimeStep(config.get("pybullet_timestep", 0.01))
-        self.phase = 1 
-        self.maps = [None, GridMap1(), GridMap2(), GridMap3()]
+        self.phase = 6
+        self.maps = [None, GridMap1(), GridMap2(), GridMap3(),None, None, GridMap6()]
         self.map = self.maps[self.phase]
 
         
@@ -33,7 +33,7 @@ class FollowTemplate(PhysicalEnv):
     def set_phase(self, **kwargs):
         self.follow_intensity = kwargs.get("follow_intensity", 0.5)
         self.avoid_intensity = kwargs.get("avoid_intensity", 0.5)
-        self.phase = kwargs.get("phase", 1)
+        self.phase = kwargs.get("phase", 6)
         self.map = self.maps[self.phase]
         self.num_obstacles = self.map.num_obstacles
 
@@ -45,7 +45,7 @@ class FollowTemplate(PhysicalEnv):
                 for obj in object_list:
                     obj.remove()
                 object_list.clear()
-        if 1<=self.phase<=3:
+        if 1<=self.phase<=6:
             for _ in range(self.num_targets):
                 self.build_position("target", [t-i for t,i in zip(self.map.target_position, self.map.init_position)] , **self.config.get("target", None))
             for _ in range(self.num_agents):
@@ -66,20 +66,27 @@ class FollowTemplate(PhysicalEnv):
         self.done = {i:False for i in range(len(self.objects['agent']))}
         self.done['__all__'] = False
         self.timestep = 0
+
+        self.objects['target'][0].move_kind = "x-"
+
         return {i : np.hstack([agent.position,
                                agent.velocity])
                 for i, agent in enumerate(self.objects['agent'])}
 
     def step(self, agent_action):
-        
         if self.phase ==1 :
             pass 
         elif self.phase ==2:
             pass 
-        
+
         for agent, action in agent_action.items():
-            self.objects['agent'][agent].take_action(action, bound=self.map_size)
-        
+            self.objects['agent'][agent].take_action(action, bound=np.inf)        
+        for target in self.objects['target']:
+            if self.timestep%87==86:
+                order = ["x-","y+", "x+", "y-"]
+                target.move_kind = order[(order.index(target.move_kind)+1)%4]
+            target.move(target.move_kind, bound=np.inf)
+
         p.stepSimulation()
         for object_type, object_list in self.objects.items():
             for obj in object_list:
@@ -104,20 +111,21 @@ class FollowTemplate(PhysicalEnv):
         for a in agents:
             agent = self.objects['agent'][a]
             if p.getContactPoints(agent.pid):
-                reward[a] -= 1000/self.max_timestep * self.avoid_intensity
+                reward[a] -= 1 * self.avoid_intensity
                 self.remove_candidates.append(a)
             for target in self.objects['target']:
                 distance = agent.distance(target)
-                if 0.8 < distance < 1:
-                    reward[a] += 1/self.max_timestep * self.follow_intensity 
+                if 0.4 < distance < 0.5:
+                    reward[a] += self.max_timestep/self.max_timestep * self.follow_intensity 
+                    self.remove_candidates.append(a)
                 # else:
                 #     reward[a] += -1/self.max_timestep * self.follow_intensity 
         return reward 
 
     def _done(self, agents):
-        # for a in set(self.remove_candidates):
-        #     self.done[a] = True 
-        #     self.objects['agent'][a].remove()
+        for a in set(self.remove_candidates):
+            self.done[a] = True 
+            self.objects['agent'][a].remove()
             
         if (sum([v for v in self.done.values()]) >= self.terminal_agent_num):            
             self.done['__all__'] = True 
@@ -141,7 +149,7 @@ if __name__ == "__main__":
     env = FollowTemplate(config)
     
     for i in range(10):
-        env.set_phase(phase=3)
+        env.set_phase(phase=6)
         env.reset()
         
         for j in range(2000):
@@ -154,4 +162,3 @@ if __name__ == "__main__":
 
             state, reward, done, info = env.step({i:action for i in alive_agents})
             time.sleep(0.01)
-            print(reward)

@@ -40,12 +40,16 @@ class PhysicalObjects:
             randomness2 = np.random.uniform(-1,1) 
             force = [randomness1*self.acc , randomness2*self.acc , 0]
         elif kind=="x+":
+            force = [0,0,0]
             p.resetBaseVelocity(self.pid,  [-self.acc*10, 0, 0])
         elif kind=="x-":
+            force = [0,0,0]
             p.resetBaseVelocity(self.pid,  [self.acc*10, 0, 0])
         elif kind=="y+":
+            force = [0,0,0]
             p.resetBaseVelocity(self.pid, [0, self.acc*10, 0])
         elif kind=="y-":
+            force = [0,0,0]
             p.resetBaseVelocity(self.pid, [0, -self.acc*10, 0])
 
         else:
@@ -56,7 +60,6 @@ class PhysicalObjects:
                             forceObj=force,
                             posObj=self.position,
                             flags=p.WORLD_FRAME)
-
 
     def clip_velocity(self):
         speed = np.linalg.norm(self.velocity)
