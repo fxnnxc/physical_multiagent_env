@@ -32,7 +32,7 @@ def on_train_result(info):
     trainer = info["trainer"]
     c = env_config['curriculum_learning']
 
-    if result['training_iteration'] % 500 = 499:
+    if result['training_iteration'] % 500 == 499:
         trainer.workers.foreach_worker(
             lambda ev: ev.foreach_env(
                 lambda env: env.set_phase(phase = min(env.phase+1, 3))))
