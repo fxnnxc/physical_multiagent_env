@@ -16,7 +16,7 @@ from ray.rllib.agents.ppo import PPOTrainer
 from ray.rllib.agents.dqn import DQNTrainer
 
 from physical_multiagent_env.scenarios.FollowAvoid.scenario import FollowAvoid
-from physical_multiagent_env.reinforcement_learning.utils.observation_functions import Observation_1
+from physical_multiagent_env.reinforcement_learning.utils.observation_functions import Observation_CNN
 
 # -----------------------------------------
 # Train With Ray  : you must inherit MultiAgentEnv to train with ray 
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     ray.init()
     register_env("FollowAvoidRay", lambda config:FollowAvoidRay(config))
 
-    observation = Observation_1(num_targets=1)
+    observation = Observation_CNN(num_targets=1)
     config = {
         "env" : "FollowAvoidRay",
         "num_workers" : rllib_config['num_workers']  ,
@@ -65,7 +65,7 @@ if __name__ == '__main__':
             },
             "policy_mapping_fn": lambda i : "pol",
             "policies_to_train":["pol"],
-            "observation_fn" : Observation_1.observation_fn_1
+            "observation_fn" : Observation_CNN.observation_fn_1
         },
         'framework' : rllib_config['framework'],
         "callbacks":{"on_train_result":on_train_result}
@@ -108,7 +108,7 @@ if __name__ == '__main__':
                 # if count==0:
                 #     time.sleep(5)
                 alive_agents = [k for k,v in done.items() if v==False]
-                obs = Observation_1.observation_fn_1(obs, env)
+                obs = Observation_CNN.observation_fn_1(obs, env)
                 actions =  {i:agent.compute_action(obs[i], policy_id=f"pol") 
                                         for i in alive_agents if i!="__all__"}
                 obs, reward, done, info = env.step(actions)
