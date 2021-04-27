@@ -2,6 +2,7 @@ from physical_multiagent_env.envs.PhysicalEnv import PhysicalEnv
 import pybullet as p 
 import numpy as np 
 import random 
+from physical_multiagent_env.scenarios.utils.maps import *
 
 # from physical_multiagent_env.envs.PhysicalObjects import PhysicalObjects, Agent
 # import pybullet as p 
@@ -11,7 +12,7 @@ import random
 # import gym 
 from gym.spaces import Dict
 
-class FollowAvoid(PhysicalEnv):
+class FollowTemplate(PhysicalEnv):
     def __init__(self, config={}):
         super().__init__(config)
         self.max_timestep = config.get("max_timestep", 10000)
@@ -20,33 +21,66 @@ class FollowAvoid(PhysicalEnv):
         self.directions = ["x+", "x-", "y+", "y-"] 
         self.follow_intensity = 1
         self.avoid_intensity = 1
+        
         p.setTimeStep(config.get("pybullet_timestep", 0.01))
+        self.phase = 1 
+        self.maps = [None, GridMap1(), GridMap2(), GridMap3()]
+        self.map = self.maps[self.phase]
+
         
 
     # Similar to the linear combination
     def set_phase(self, **kwargs):
         self.follow_intensity = kwargs.get("follow_intensity", 0.5)
         self.avoid_intensity = kwargs.get("avoid_intensity", 0.5)
-        self.num_obstacles = kwargs.get("num_obstacles", 10)
+        self.phase = kwargs.get("phase", 1)
+        self.map = self.maps[self.phase]
+        self.num_obstacles = self.map.num_obstacles
 
-    def step(self, agent_action):
-        if self.timestep % 200 == 0:
+
+
+    def reset(self):
+        if self.objects:
             for object_type, object_list in self.objects.items():
                 for obj in object_list:
-                    obj.move_kind = random.choice(self.directions)
-        if self.timestep % 200 == 0:
-            for target in self.objects['target']:
-                target.move_kind = random.choice(self.directions)
+                    obj.remove()
+                object_list.clear()
+        if 1<=self.phase<=3:
+            for _ in range(self.num_targets):
+                self.build_position("target", [t-i for t,i in zip(self.map.target_position, self.map.init_position)] , **self.config.get("target", None))
+            for _ in range(self.num_agents):
+                self.build_position("agent",  [a-i for a,i in zip(self.map.agent_position, self.map.init_position)], **self.config.get("agent", None))
+            for r in range(self.map.width):
+                for c in range(self.map.height):
+                    if self.map.map1[r][c] == 1:
+                        self.build_position("obstacle", [r-self.map.init_position[0], c-self.map.init_position[1] ,0], **self.config.get("obstacle", None))
+            for obj in self.objects["obstacle"]:
+                p.changeDynamics(obj.pid, -1, mass=100000)
 
+        self.observation_space = Dict({
+            i: agent.observation_space for i, agent in enumerate(self.objects['agent'])
+        })
+        self.action_space = Dict({
+            i : agent.action_space for i, agent in enumerate(self.objects['agent'])    
+        })
+        self.done = {i:False for i in range(len(self.objects['agent']))}
+        self.done['__all__'] = False
+        self.timestep = 0
+        return {i : np.hstack([agent.position,
+                               agent.velocity])
+                for i, agent in enumerate(self.objects['agent'])}
+
+    def step(self, agent_action):
+        
+        if self.phase ==1 :
+            pass 
+        elif self.phase ==2:
+            pass 
+        
         for agent, action in agent_action.items():
             self.objects['agent'][agent].take_action(action, bound=self.map_size)
-        for target in self.objects['target']:
-            target.move(target.move_kind, bound=self.map_size)
-        for obstacle in self.objects['obstacle']:
-            obstacle.move(obstacle.move_kind, bound=self.map_size)
         
         p.stepSimulation()
-
         for object_type, object_list in self.objects.items():
             for obj in object_list:
                 if obj.alive:
@@ -81,9 +115,9 @@ class FollowAvoid(PhysicalEnv):
         return reward 
 
     def _done(self, agents):
-        for a in set(self.remove_candidates):
-            self.done[a] = True 
-            self.objects['agent'][a].remove()
+        # for a in set(self.remove_candidates):
+        #     self.done[a] = True 
+        #     self.objects['agent'][a].remove()
             
         if (sum([v for v in self.done.values()]) >= self.terminal_agent_num):            
             self.done['__all__'] = True 
@@ -98,22 +132,26 @@ class FollowAvoid(PhysicalEnv):
 import time
 import json 
 if __name__ == "__main__":
-    with open("../../reinforcement_learning/FollowAvoid/version1.json") as f :
+    with open("../../reinforcement_learning/FollowTemplate/version1.json") as f :
         config = json.load(f)
 
     config = config['env_config']
     config['connect'] = p.GUI
 
-    env = FollowAvoid(config)
+    env = FollowTemplate(config)
     
     for i in range(10):
+        env.set_phase(phase=3)
         env.reset()
+        
         for j in range(2000):
             alive_agents = []
             for index, agent in enumerate(env.objects['agent']):
                 if agent.alive:
                     alive_agents.append(index)
+            if j%30==0:
+                action = np.random.randint(5)
 
-            state, reward, done, info = env.step({i:1 for i in alive_agents})
+            state, reward, done, info = env.step({i:action for i in alive_agents})
             time.sleep(0.01)
             print(reward)
