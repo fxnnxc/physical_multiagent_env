@@ -23,7 +23,9 @@
         "num_targets" : 1,
         "map_size" : 4,
         "max_timestep" : 3000,
-        "curriculum_learning":1
+        "curriculum_learning":1,
+        "observation_range" : 10,
+        "cnn_size" : 42
     },
 
     "rllib_config":{

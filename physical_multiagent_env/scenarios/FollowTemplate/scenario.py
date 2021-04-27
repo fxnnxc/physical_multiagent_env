@@ -104,20 +104,21 @@ class FollowTemplate(PhysicalEnv):
         for a in agents:
             agent = self.objects['agent'][a]
             if p.getContactPoints(agent.pid):
-                reward[a] -= 1000/self.max_timestep * self.avoid_intensity
+                reward[a] -= 1 * self.avoid_intensity
                 self.remove_candidates.append(a)
             for target in self.objects['target']:
                 distance = agent.distance(target)
-                if 0.8 < distance < 1:
-                    reward[a] += 1/self.max_timestep * self.follow_intensity 
+                if 0.4 < distance < 0.5:
+                    reward[a] += self.max_timestep/self.max_timestep * self.follow_intensity 
+                    self.remove_candidates.append(a)
                 # else:
                 #     reward[a] += -1/self.max_timestep * self.follow_intensity 
         return reward 
 
     def _done(self, agents):
-        # for a in set(self.remove_candidates):
-        #     self.done[a] = True 
-        #     self.objects['agent'][a].remove()
+        for a in set(self.remove_candidates):
+            self.done[a] = True 
+            self.objects['agent'][a].remove()
             
         if (sum([v for v in self.done.values()]) >= self.terminal_agent_num):            
             self.done['__all__'] = True 

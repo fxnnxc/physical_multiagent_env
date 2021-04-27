@@ -15,14 +15,14 @@ from ray.rllib.env.multi_agent_env import MultiAgentEnv
 from ray.rllib.agents.ppo import PPOTrainer
 from ray.rllib.agents.dqn import DQNTrainer
 
-from physical_multiagent_env.scenarios.FollowAvoid.scenario import FollowAvoid
+from physical_multiagent_env.scenarios.FollowTemplate.scenario import FollowTemplate
 from physical_multiagent_env.reinforcement_learning.utils.observation_functions import Observation_CNN
 
 # -----------------------------------------
 # Train With Ray  : you must inherit MultiAgentEnv to train with ray 
 # -----------------------------------------
 
-class FollowAvoidRay(FollowAvoid, MultiAgentEnv):
+class FollowTemplateRay(FollowTemplate, MultiAgentEnv):
     def __init__(self, config={}):
         super().__init__(config)
 
@@ -32,10 +32,13 @@ def on_train_result(info):
     trainer = info["trainer"]
     c = env_config['curriculum_learning']
 
-    if result['training_iteration'] % 500 = 499:
+
+    if True : #result['episode_reward_mean'] > 0.9:
+        #phase = min(env.phase+1, 3)
+        phase = np.random.randint(3)+1
         trainer.workers.foreach_worker(
             lambda ev: ev.foreach_env(
-                lambda env: env.set_phase(phase = min(env.phase+1, 3))))
+                lambda env: env.set_phase(phase = phase)))
 
 if __name__ == '__main__':
     
@@ -51,11 +54,11 @@ if __name__ == '__main__':
         env_config = general_config['env_config']
 
     ray.init()
-    register_env("FollowAvoidRay", lambda config:FollowAvoidRay(config))
+    register_env("FollowTemplateRay", lambda config:FollowTemplateRay(config))
 
-    observation = Observation_CNN(num_targets=1)
+    observation = Observation_CNN(num_targets=1, size=42, observation_range=10)
     config = {
-        "env" : "FollowAvoidRay",
+        "env" : "FollowTemplateRay",
         "num_workers" : rllib_config['num_workers']  ,
         "num_gpus": rllib_config['num_gpus'] ,
         "env_config": env_config,
@@ -85,9 +88,9 @@ if __name__ == '__main__':
                     )    
     else:
         if rllib_config['model'] == "PPO":
-            agent = PPOTrainer(config=config, env=FollowAvoidRay)
+            agent = PPOTrainer(config=config, env=FollowTemplateRay)
         elif rllib_config['model'] == "DQN":
-            agent = DQNTrainer(config=config, env=FollowAvoidRay)
+            agent = DQNTrainer(config=config, env=FollowTemplateRay)
         else:
             raise ValueError()
 
@@ -96,7 +99,7 @@ if __name__ == '__main__':
         # config['env_config']['map_size'] = 3
         # config['env_config']["connect"] =p.GUI
 
-        env = FollowAvoidRay(config['env_config'])
+        env = FollowTemplateRay(config['env_config'])
         
         Reward = [] 
         for i in range(50):
