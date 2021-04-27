@@ -18,32 +18,38 @@ from ray.rllib.agents.dqn import DQNTrainer
 from physical_multiagent_env.scenarios.FollowTemplate.scenario import FollowTemplate
 from physical_multiagent_env.reinforcement_learning.utils.observation_functions import Observation_CNN
 
-# -----------------------------------------
-# Train With Ray  : you must inherit MultiAgentEnv to train with ray 
-# -----------------------------------------
 
 class FollowTemplateRay(FollowTemplate, MultiAgentEnv):
     def __init__(self, config={}):
         super().__init__(config)
+
+def train(config, reporter):
+    trainer = DQNTrainer(config=config, env="FollowTemplateRay")
+    # trainer = PPOTrainer(config=config, env=YourEnv)
+    while True:
+        result = trainer.train()
+        reporter(**result)
+        if result["episode_reward_mean"] > 0.9:
+            phase = np.random.randint(3)+1
+        trainer.workers.foreach_worker(
+            lambda ev: ev.foreach_env(
+                lambda env: env.set_phase(phase)))
+
 
 def on_train_result(info):
     result = info["result"]
     env_config = result['config']['env_config']
     trainer = info["trainer"]
     c = env_config['curriculum_learning']
-    print(info)
-    assert False 
 
-
-    if result['episode_reward_mean'] > 0.5:
-        #phase = min(env.phase+1, 3)
+    if True : 
+        #phase = min(  env.phase+1, 3)
         phase = np.random.randint(3)+1
         trainer.workers.foreach_worker(
             lambda ev: ev.foreach_env(
                 lambda env: env.set_phase(phase = phase)))
 
 if __name__ == '__main__':
-    
     parser = argparse.ArgumentParser()
     parser.add_argument('--test', action="store_true")
     parser.add_argument("--resume", action="store_true")
@@ -80,7 +86,7 @@ if __name__ == '__main__':
         if args.resume:
             checkpoint = args.checkpoint 
 
-        analysis = tune.run(rllib_config['model'],
+        analysis = tune.run(train,
                             config=config,
                             stop=rllib_config['stop'],
                             checkpoint_freq = rllib_config['checkpoint_freq'],
