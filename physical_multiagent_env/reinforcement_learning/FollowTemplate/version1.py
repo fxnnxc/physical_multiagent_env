@@ -33,7 +33,7 @@ def on_train_result(info):
     c = env_config['curriculum_learning']
 
 
-    if True : #result['episode_reward_mean'] > 0.9:
+    if result['episode_reward_mean'] > 0.5:
         #phase = min(env.phase+1, 3)
         phase = np.random.randint(3)+1
         trainer.workers.foreach_worker(

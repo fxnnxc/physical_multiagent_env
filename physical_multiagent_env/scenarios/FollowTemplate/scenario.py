@@ -23,7 +23,7 @@ class FollowTemplate(PhysicalEnv):
         self.avoid_intensity = 1
         
         p.setTimeStep(config.get("pybullet_timestep", 0.01))
-        self.phase = 1 
+        self.phase = 3
         self.maps = [None, GridMap1(), GridMap2(), GridMap3()]
         self.map = self.maps[self.phase]
 
@@ -33,7 +33,7 @@ class FollowTemplate(PhysicalEnv):
     def set_phase(self, **kwargs):
         self.follow_intensity = kwargs.get("follow_intensity", 0.5)
         self.avoid_intensity = kwargs.get("avoid_intensity", 0.5)
-        self.phase = kwargs.get("phase", 1)
+        self.phase = kwargs.get("phase", 3)
         self.map = self.maps[self.phase]
         self.num_obstacles = self.map.num_obstacles
 
