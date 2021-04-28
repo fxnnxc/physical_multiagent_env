@@ -65,7 +65,7 @@ class Observation_1:
 
 class Observation_CNN:
     def __init__(self, num_targets, size, observation_range=2):
-        self.observation_space =Box(low=-np.inf, high=np.inf, shape=(size, size, 4))
+        self.observation_space =Box(low=-np.inf, high=np.inf, shape=(size, size, 5))
         self.size = size 
         self.observation_range = observation_range
 
@@ -76,18 +76,19 @@ class Observation_CNN:
         size = kw['worker'].policy_config['env_config']['cnn_size']
         observation_range =kw['worker'].policy_config['env_config']['observation_range'] #env.observation_range
 
-        new_obs = {a:np.zeros((size, size, 4)) for a in agent_obs.keys()}
+        new_obs = {a:np.zeros((size, size, 5)) for a in agent_obs.keys()}
 
         for a in agent_obs.keys():
             agent = env.objects['agent'][a]
-            for obj_type, obj_list in env.objects.items():
+            for i, (obj_type, obj_list) in enumerate(env.objects.items()):
                 for obj in  obj_list:
                     distance = agent.distance(obj, measure="manhattan")
                     if distance < observation_range:
                         position = np.ceil(transform(agent.relative_position(obj), size, observation_range))
                         position = position.astype(int)
-                        new_obs[a][position[0], position[1], 1:] = agent.relative_velocity(obj)
-                        new_obs[a][position[0], position[1], 0] = obj.globalScaling
+                        new_obs[a][position[0], position[1], 2:] = agent.relative_velocity(obj)
+                        new_obs[a][position[0], position[1], 1] = obj.globalScaling
+                        new_obs[a][position[0], position[1], 0] = i+1
 
         return new_obs
 

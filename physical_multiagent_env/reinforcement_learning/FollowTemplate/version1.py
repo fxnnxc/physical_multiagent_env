@@ -31,16 +31,13 @@ def on_train_result(info):
     env_config = result['config']['env_config']
     trainer = info["trainer"]
     c = env_config['curriculum_learning']
-    print(info)
-    assert False 
 
-
-    if True : #result['episode_reward_mean'] > 0.9:
-        #phase = min(env.phase+1, 3)
-        phase = np.random.randint(3)+1
-        trainer.workers.foreach_worker(
-            lambda ev: ev.foreach_env(
-                lambda env: env.set_phase(phase = phase)))
+    # if result['episode_reward_mean'] > 0.5:
+    #     #phase = min(env.phase+1, 3)
+    #     phase = np.random.randint(3)+1
+    #     trainer.workers.foreach_worker(
+    #         lambda ev: ev.foreach_env(
+    #             lambda env: env.set_phase(phase = phase)))
 
 if __name__ == '__main__':
     

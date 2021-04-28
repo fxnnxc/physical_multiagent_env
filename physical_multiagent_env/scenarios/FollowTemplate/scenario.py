@@ -116,8 +116,7 @@ class FollowTemplate(PhysicalEnv):
             for target in self.objects['target']:
                 distance = agent.distance(target)
                 if 0.4 < distance < 0.5:
-                    reward[a] += self.max_timestep/self.max_timestep * self.follow_intensity 
-                    self.remove_candidates.append(a)
+                    reward[a] += 1/self.max_timestep * self.follow_intensity 
                 # else:
                 #     reward[a] += -1/self.max_timestep * self.follow_intensity 
         return reward 
