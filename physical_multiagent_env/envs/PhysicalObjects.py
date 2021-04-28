@@ -125,7 +125,7 @@ class Agent(PhysicalObjects):
         if measure == "euclidian":
             return np.linalg.norm(self.relative_position(other))
         elif measure == "manhattan":
-            return np.linalg.norm(self.relative_position(other), ord=1)
+            return np.linalg.norm(self.relative_position(other), ord=np.inf)
         else:
             raise ValueError()
 
