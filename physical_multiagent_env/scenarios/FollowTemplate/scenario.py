@@ -149,7 +149,7 @@ if __name__ == "__main__":
     env = FollowTemplate(config)
     
     for i in range(10):
-        env.set_phase(phase=6)
+        env.set_phase(phase=3)
         env.reset()
         
         for j in range(2000):
