@@ -30,20 +30,20 @@
 
     "rllib_config":{
         "model" : "DQN",
-        "num_workers" : 1,
-        "num_gpus" : 0,
-        "local_dir" : "./checkpoints/curriculum_learning",
-        "name" : "curriculum_2_DQN",
-        "checkpoint_freq" : 1000,
+        "num_workers" : 10,
+        "num_gpus" : 1,
+        "local_dir" : "./checkpoints",
+        "name" : "map6",
+        "checkpoint_freq" : 3000,
         "framework" : "torch",
         "stop":{
-            "training_iteration" : 1000
+            "training_iteration" : 6000
         },
         "exploration_config": {
             "type": "EpsilonGreedy",
             "initial_epsilon": 1.0,
-            "final_epsilon": 0.05,
-            "epsilon_timesteps": 10000
+            "final_epsilon": 0.1,
+            "epsilon_timesteps": 20000
         }
     }
 }
