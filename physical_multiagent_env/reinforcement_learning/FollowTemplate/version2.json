@@ -43,7 +43,7 @@
             "type": "EpsilonGreedy",
             "initial_epsilon": 1.0,
             "final_epsilon": 0.1,
-            "epsilon_timesteps": 10000
+            "epsilon_timesteps": 20000
         }
     }
 }
