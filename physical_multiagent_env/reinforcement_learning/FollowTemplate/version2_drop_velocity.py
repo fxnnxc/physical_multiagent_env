@@ -19,7 +19,7 @@ from physical_multiagent_env.scenarios.FollowTemplate.scenario import FollowTemp
 from physical_multiagent_env.reinforcement_learning.utils.observation_functions import Observation_CNN
 
 
-class FollowTemplateRay(FollowTemplate, MultiAgentEnv):
+class FollowTempl   ateRay(FollowTemplate, MultiAgentEnv):
     def __init__(self, config={}):
         super().__init__(config)
 

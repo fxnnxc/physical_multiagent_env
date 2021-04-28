@@ -8,7 +8,7 @@
         },
         "target":{
             "globalScaling" : 2,
-            "acc" : 0.8,
+            "acc" : 0.2,
             "max_speed" : 2,
             "color" : [0,0,125,1]
         },
@@ -22,28 +22,28 @@
         "num_obstacles" : 10,
         "num_targets" : 1,
         "map_size" : 4,
-        "max_timestep" : 3000,
+        "max_timestep" : 5000,
         "curriculum_learning":1,
         "observation_range" : 10,
         "cnn_size" : 80
     },
 
     "rllib_config":{
-        "model" : "DQN",
+        "model" : "IMPALA",
         "num_workers" : 10,
         "num_gpus" : 1,
         "local_dir" : "./checkpoints",
         "name" : "map6",
-        "checkpoint_freq" : 3000,
+        "checkpoint_freq" : 300,
         "framework" : "torch",
         "stop":{
-            "training_iteration" : 6000
+            "training_iteration" : 1500
         },
         "exploration_config": {
             "type": "EpsilonGreedy",
             "initial_epsilon": 1.0,
             "final_epsilon": 0.1,
-            "epsilon_timesteps": 20000
+            "epsilon_timesteps": 10000
         }
     }
 }
