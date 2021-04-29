@@ -79,6 +79,7 @@ if __name__ == '__main__':
                             config=config,
                             stop=rllib_config['stop'],
                             checkpoint_freq = rllib_config['checkpoint_freq'],
+                            checkpoint_at_end=True,
                             local_dir = rllib_config['local_dir'],
                             name = rllib_config['name'],
                             restore= checkpoint if args.resume else None
