@@ -2,7 +2,7 @@ from physical_multiagent_env.envs.PhysicalEnv import PhysicalEnv
 import pybullet as p 
 import numpy as np 
 import random 
-from physical_multiagent_env.scenarios.utils.maps import *
+from physical_multiagent_env.utils.maps import *
 
 # from physical_multiagent_env.envs.PhysicalObjects import PhysicalObjects, Agent
 # import pybullet as p 
@@ -82,7 +82,7 @@ class FollowTemplate(PhysicalEnv):
         for agent, action in agent_action.items():
             self.objects['agent'][agent].take_action(action, bound=np.inf)        
         for target in self.objects['target']:
-            if self.timestep%(348)==347:
+            if self.timestep%(87*4)==347:
                 order = ["x-","y+", "x+", "y-"]
                 target.move_kind = order[(order.index(target.move_kind)+1)%4]
             target.move(target.move_kind, bound=np.inf)

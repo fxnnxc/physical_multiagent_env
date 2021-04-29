@@ -16,7 +16,7 @@ from ray.rllib.agents.ppo import PPOTrainer
 from ray.rllib.agents.dqn import DQNTrainer
 
 from physical_multiagent_env.scenarios.FollowTemplate.scenario import FollowTemplate
-from physical_multiagent_env.reinforcement_learning.utils.observation_functions import Observation_CNN
+from physical_multiagent_env.utils.observation_functions import Observation_CNN
 
 
 class FollowTemplateRay(FollowTemplate, MultiAgentEnv):
