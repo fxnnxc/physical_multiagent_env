@@ -25,7 +25,7 @@
         "max_timestep" : 5000,
         "curriculum_learning":1,
         "observation_range" : 10,
-        "cnn_size" : 80,
+        "cnn_size" : 100,
         "phase" : 9
     },
 

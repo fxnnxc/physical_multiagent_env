@@ -53,7 +53,7 @@ if __name__ == '__main__':
     ray.init()
     register_env("FollowTemplateRay", lambda config:FollowTemplateRay(config))
 
-    observation = Observation_CNN(num_targets=1, size=80, observation_range=10)
+    observation = Observation_CNN(num_targets=1, size=100, observation_range=10)
     config = {
         "env" : "FollowTemplateRay",
         "num_workers" : rllib_config['num_workers']  ,
