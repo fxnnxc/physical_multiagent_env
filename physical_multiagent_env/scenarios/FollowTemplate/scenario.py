@@ -82,7 +82,7 @@ class FollowTemplate(PhysicalEnv):
         for agent, action in agent_action.items():
             self.objects['agent'][agent].take_action(action, bound=np.inf)        
         for target in self.objects['target']:
-            if self.timestep%87==86:
+            if self.timestep%(348)==347:
                 order = ["x-","y+", "x+", "y-"]
                 target.move_kind = order[(order.index(target.move_kind)+1)%4]
             target.move(target.move_kind, bound=np.inf)
