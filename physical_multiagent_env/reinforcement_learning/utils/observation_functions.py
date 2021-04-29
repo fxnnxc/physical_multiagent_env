@@ -66,7 +66,7 @@ class Observation_1:
 
 class Observation_CNN:
     def __init__(self, num_targets, size, observation_range=2):
-        self.observation_space =Box(low=-np.inf, high=np.inf, shape=(size, size, 5))
+        self.observation_space =Box(low=-np.inf, high=np.inf, shape=(size, size))
         self.size = size 
         self.observation_range = observation_range
 
@@ -104,24 +104,26 @@ class Observation_CNN:
         else:
             size = kw['test_config']['size']
             observation_range = kw['test_config']['observation_range']
-        new_obs = {a:np.zeros((size, size, 1)) for a in agent_obs.keys()}
+        new_obs = {a:np.zeros((size, size)) for a in agent_obs.keys()}
 
         for a in agent_obs.keys():
             agent = env.objects['agent'][a]
             for i, (obj_type, obj_list) in enumerate(env.objects.items()):
                 for obj in  obj_list:
+                    if not obj.alive:
+                        continue
                     distance = agent.distance(obj, measure="manhattan")
                     if distance < observation_range:
                         position = np.ceil(transform(agent.relative_position(obj), size, observation_range))
                         position = position.astype(int)
                         # new_obs[a][position[0], position[1], 1:] = agent.relative_velocity(obj)
-                        new_obs[a][position[0], position[1], 0] = i+1
+                        new_obs[a][position[0], position[1]] = i+1
 
                         s = max(1, int(p.getCollisionShapeData(obj.pid, -1)[0][3][0]*(size//2)/observation_range))
                         for r in range(s):
                             for c in range(s):
                                 # new_obs[a][position[0]+r-s//2, position[1]+c-s//2, 1:] = agent.relative_velocity(obj)
-                                new_obs[a][position[0]+r-s//2, position[1]+c-s//2, 0] = i+1
+                                new_obs[a][position[0]+r-s//2, position[1]+c-s//2] = i+1
 
         return new_obs
 

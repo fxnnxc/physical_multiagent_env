@@ -19,21 +19,9 @@ from physical_multiagent_env.scenarios.FollowTemplate.scenario import FollowTemp
 from physical_multiagent_env.reinforcement_learning.utils.observation_functions import Observation_CNN
 
 
-class FollowTemplateRay(FollowTemplate, MultiAgentEnv):
+class FollowTempl   ateRay(FollowTemplate, MultiAgentEnv):
     def __init__(self, config={}):
         super().__init__(config)
-
-def train(config, reporter):
-    trainer = DQNTrainer(config=config, env="FollowTemplateRay")
-    # trainer = PPOTrainer(config=config, env=YourEnv)
-    while True:
-        result = trainer.train()
-        reporter(**result)
-        if result["episode_reward_mean"] > 0.9:
-            phase = np.random.randint(3)+1
-        trainer.workers.foreach_worker(
-            lambda ev: ev.foreach_env(
-                lambda env: env.set_phase(phase)))
 
 
 def on_train_result(info):
@@ -41,6 +29,7 @@ def on_train_result(info):
     env_config = result['config']['env_config']
     trainer = info["trainer"]
     c = env_config['curriculum_learning']
+    return 
 
     if True : 
         #phase = min(  env.phase+1, 3)
@@ -56,7 +45,7 @@ if __name__ == '__main__':
     parser.add_argument("--checkpoint", type=str)
     args = parser.parse_args()
 
-    with open("version1.json") as f :
+    with open("version2.json") as f :
         general_config = json.load(f)
         rllib_config = general_config['rllib_config']
         env_config = general_config['env_config']
@@ -64,7 +53,7 @@ if __name__ == '__main__':
     ray.init()
     register_env("FollowTemplateRay", lambda config:FollowTemplateRay(config))
 
-    observation = Observation_CNN(num_targets=1, size=42, observation_range=10)
+    observation = Observation_CNN(num_targets=1, size=80, observation_range=10)
     config = {
         "env" : "FollowTemplateRay",
         "num_workers" : rllib_config['num_workers']  ,
@@ -76,7 +65,7 @@ if __name__ == '__main__':
             },
             "policy_mapping_fn": lambda i : "pol",
             "policies_to_train":["pol"],
-            "observation_fn" : Observation_CNN.observation_fn_1
+            "observation_fn" : Observation_CNN.observation_fn_2
         },
         'framework' : rllib_config['framework'],
         "callbacks":{"on_train_result":on_train_result}
@@ -86,7 +75,7 @@ if __name__ == '__main__':
         if args.resume:
             checkpoint = args.checkpoint 
 
-        analysis = tune.run(train,
+        analysis = tune.run(rllib_config['model'],
                             config=config,
                             stop=rllib_config['stop'],
                             checkpoint_freq = rllib_config['checkpoint_freq'],
@@ -119,7 +108,7 @@ if __name__ == '__main__':
                 # if count==0:
                 #     time.sleep(5)
                 alive_agents = [k for k,v in done.items() if v==False]
-                obs = Observation_CNN.observation_fn_1(obs, env)
+                obs = Observation_CNN.observation_fn_2(obs, env)
                 actions =  {i:agent.compute_action(obs[i], policy_id=f"pol") 
                                         for i in alive_agents if i!="__all__"}
                 obs, reward, done, info = env.step(actions)
