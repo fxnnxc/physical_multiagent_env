@@ -167,7 +167,7 @@ if __name__ == "__main__":
                 if agent.alive:
                     alive_agents.append(index)
             if j%30==0:
-                action = 1
+                action = 0
 
             state, reward, done, info = env.step({i:action for i in alive_agents})
-            time.sleep(0.00002)
+            time.sleep(0.000005)
