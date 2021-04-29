@@ -51,7 +51,8 @@ class PhysicalObjects:
         elif kind=="y-":
             force = [0,0,0]
             p.resetBaseVelocity(self.pid, [0, -self.acc*10, 0])
-
+        elif kind=="with_velocity":
+            p.resetBaseVelocity(self.pid, kwargs['velocity'])
         else:
             raise ValueError("Undefined Movement...")        
         
