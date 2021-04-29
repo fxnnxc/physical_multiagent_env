@@ -30,14 +30,15 @@
 
     "rllib_config":{
         "model" : "PPO",
-        "num_workers" : 1,
+        "num_workers" : 10,
         "num_gpus" : 1,
         "local_dir" : "./checkpoints",
         "name" : "map6",
         "checkpoint_freq" : 300,
         "framework" : "torch",
         "stop":{
-            "training_iteration" : 1500
+            "training_iteration" : 3000,
+            "episode_reward_mean" :0.9
         },
         "exploration_config": {
             "type": "EpsilonGreedy",
