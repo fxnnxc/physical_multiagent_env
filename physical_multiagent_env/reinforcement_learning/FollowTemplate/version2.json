@@ -34,7 +34,7 @@
         "num_workers" : 10,
         "num_gpus" : 1,
         "local_dir" : "./checkpoints",
-        "name" : "map6",
+        "name" : "FollowTemplate",
         "checkpoint_freq" : 300,
         "framework" : "torch",
         "stop":{
