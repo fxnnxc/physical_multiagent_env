@@ -8,12 +8,12 @@
         },
         "target":{
             "globalScaling" : 2,
-            "acc" : 0.1,
+            "acc" : 0.2,
             "max_speed" : 2,
             "color" : [0,0,125,1]
         },
         "obstacle":{
-            "globalScaling" : 2,
+            "globalScaling" : 20,
             "color" : [125,125,125,1],
             "acc" : 0.0001,
             "max_speed" : 2
@@ -23,24 +23,26 @@
         "num_targets" : 1,
         "map_size" : 4,
         "max_timestep" : 3000,
-        "curriculum_learning":1
+        "curriculum_learning":1,
+        "observation_range" : 10,
+        "cnn_size" : 80
     },
 
     "rllib_config":{
         "model" : "DQN",
-        "num_workers" : 5,
+        "num_workers" : 10,
         "num_gpus" : 1,
-        "local_dir" : "./checkpoints/curriculum_learning",
-        "name" : "curriculum_2_DQN",
-        "checkpoint_freq" : 1000,
+        "local_dir" : "./checkpoints",
+        "name" : "map6",
+        "checkpoint_freq" : 3000,
         "framework" : "torch",
         "stop":{
-            "training_iteration" : 1000
+            "training_iteration" : 6000
         },
         "exploration_config": {
             "type": "EpsilonGreedy",
             "initial_epsilon": 1.0,
-            "final_epsilon": 0.05,
+            "final_epsilon": 0.1,
             "epsilon_timesteps": 10000
         }
     }

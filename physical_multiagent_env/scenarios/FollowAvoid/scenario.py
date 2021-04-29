@@ -3,19 +3,40 @@ import pybullet as p
 import numpy as np 
 import random 
 
+# from physical_multiagent_env.envs.PhysicalObjects import PhysicalObjects, Agent
+# import pybullet as p 
+# import numpy as np 
+# import time 
+# import pybullet_data 
+# import gym 
+from gym.spaces import Dict
+
 class FollowAvoid(PhysicalEnv):
     def __init__(self, config={}):
         super().__init__(config)
         self.max_timestep = config.get("max_timestep", 10000)
         self.remove_candidates =[]
         self.terminal_agent_num = np.clip(config.get("terminal_agent_num", 10), 1, self.num_agents)
-        self.directions = ["x+", "x-", "y+", "y-"]    
+        self.directions = ["x+", "x-", "y+", "y-"] 
+        self.follow_intensity = 1
+        self.avoid_intensity = 1
+        p.setTimeStep(config.get("pybullet_timestep", 0.01))
+        
+
+    # Similar to the linear combination
+    def set_phase(self, **kwargs):
+        self.follow_intensity = kwargs.get("follow_intensity", 0.5)
+        self.avoid_intensity = kwargs.get("avoid_intensity", 0.5)
+        self.num_obstacles = kwargs.get("num_obstacles", 10)
 
     def step(self, agent_action):
-        if self.timestep % 300 == 0:
+        if self.timestep % 200 == 0:
             for object_type, object_list in self.objects.items():
                 for obj in object_list:
                     obj.move_kind = random.choice(self.directions)
+        if self.timestep % 200 == 0:
+            for target in self.objects['target']:
+                target.move_kind = random.choice(self.directions)
 
         for agent, action in agent_action.items():
             self.objects['agent'][agent].take_action(action, bound=self.map_size)
@@ -44,19 +65,19 @@ class FollowAvoid(PhysicalEnv):
         return state, reward, done, info
 
     def _reward(self, agents): 
-        # MAX : +10 (no collision and full target follwing)
-        # MIN : -3 (collision at the last step)
         self.remove_candidates.clear()  
-        reward = {a:-1/self.max_timestep for a  in agents}
+        reward = {a:0 for a  in agents}
         for a in agents:
             agent = self.objects['agent'][a]
             if p.getContactPoints(agent.pid):
-                reward[a] -= 40/self.max_timestep 
+                reward[a] -= 1000/self.max_timestep * self.avoid_intensity
                 self.remove_candidates.append(a)
             for target in self.objects['target']:
                 distance = agent.distance(target)
-                if 1 < distance < 1.2:
-                    reward[a] +=20/self.max_timestep
+                if 0.8 < distance < 1:
+                    reward[a] += 1/self.max_timestep * self.follow_intensity 
+                # else:
+                #     reward[a] += -1/self.max_timestep * self.follow_intensity 
         return reward 
 
     def _done(self, agents):
@@ -74,41 +95,25 @@ class FollowAvoid(PhysicalEnv):
     def _info(self):
         return {}
 
-import time 
+import time
+import json 
 if __name__ == "__main__":
-    config ={
-        "agent":{
-            "scaling" : 2,
-            "color" : [125,0,0,1]
-        },
-        "target":{
-            "scaling" : 3
-        },
-        "obstacle":{
-            "scaling" : 4,
-            "color" : [125,125,0,1]
-        },
-        "num_agents" : 1,
-        "num_obstacles" : 10,
-        "num_targets" : 1,
-        "map_size" : 3,
-        "max_timestep" : 3000,
-        'connect':p.GUI
-    }
+    with open("../../reinforcement_learning/FollowAvoid/version1.json") as f :
+        config = json.load(f)
+
+    config = config['env_config']
+    config['connect'] = p.GUI
 
     env = FollowAvoid(config)
-    env.map_size = 5
-    env.num_obstacles = 50
-    env.num_agents = 1
-    env.num_targets = 2
+    
     for i in range(10):
         env.reset()
-        for j in range(1000):
+        for j in range(2000):
             alive_agents = []
             for index, agent in enumerate(env.objects['agent']):
                 if agent.alive:
                     alive_agents.append(index)
 
-            state, reward, done, info = env.step({i:0 for i in alive_agents})
-            time.sleep(0.1)
+            state, reward, done, info = env.step({i:1 for i in alive_agents})
+            time.sleep(0.01)
             print(reward)

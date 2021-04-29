@@ -40,14 +40,19 @@ class PhysicalObjects:
             randomness2 = np.random.uniform(-1,1) 
             force = [randomness1*self.acc , randomness2*self.acc , 0]
         elif kind=="x+":
+            force = [0,0,0]
             p.resetBaseVelocity(self.pid,  [-self.acc*10, 0, 0])
         elif kind=="x-":
+            force = [0,0,0]
             p.resetBaseVelocity(self.pid,  [self.acc*10, 0, 0])
         elif kind=="y+":
+            force = [0,0,0]
             p.resetBaseVelocity(self.pid, [0, self.acc*10, 0])
         elif kind=="y-":
+            force = [0,0,0]
             p.resetBaseVelocity(self.pid, [0, -self.acc*10, 0])
-
+        elif kind=="with_velocity":
+            p.resetBaseVelocity(self.pid, kwargs['velocity'])
         else:
             raise ValueError("Undefined Movement...")        
         
@@ -56,7 +61,6 @@ class PhysicalObjects:
                             forceObj=force,
                             posObj=self.position,
                             flags=p.WORLD_FRAME)
-
 
     def clip_velocity(self):
         speed = np.linalg.norm(self.velocity)
@@ -118,6 +122,12 @@ class Agent(PhysicalObjects):
         relative = np.array([other.velocity[i] - self.velocity[i] for i in range(3)])
         return relative
 
-    def distance(self, other):
-        return np.linalg.norm(self.relative_position(other))
+    def distance(self, other, measure="euclidian"):
+        if measure == "euclidian":
+            return np.linalg.norm(self.relative_position(other))
+        elif measure == "manhattan":
+            return np.linalg.norm(self.relative_position(other), ord=np.inf)
+        else:
+            raise ValueError()
+
 
