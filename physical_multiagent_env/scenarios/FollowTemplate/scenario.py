@@ -24,7 +24,7 @@ class FollowTemplate(PhysicalEnv):
         p.setTimeStep(config.get("pybullet_timestep", 0.01))
         self.phase = config['phase']
         print("-----------phase-------------")
-        print(f"------------ {self.phase} ------------")
+        print(f"------------ {self.phase} --------------")
         print("-----------phase-------------")
 
         self.maps = [None, GridMap1(), GridMap2(), GridMap3(), GridMap4(), GridMap5(), GridMap6(), GridMap7(), GridMap8(), GridMap9()]
