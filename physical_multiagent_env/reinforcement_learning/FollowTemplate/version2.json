@@ -29,8 +29,8 @@
     },
 
     "rllib_config":{
-        "model" : "IMPALA",
-        "num_workers" : 10,
+        "model" : "PPO",
+        "num_workers" : 1,
         "num_gpus" : 1,
         "local_dir" : "./checkpoints",
         "name" : "map6",

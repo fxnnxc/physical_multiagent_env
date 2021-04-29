@@ -19,7 +19,7 @@ from physical_multiagent_env.scenarios.FollowTemplate.scenario import FollowTemp
 from physical_multiagent_env.reinforcement_learning.utils.observation_functions import Observation_CNN
 
 
-class FollowTempl   ateRay(FollowTemplate, MultiAgentEnv):
+class FollowTemplateRay(FollowTemplate, MultiAgentEnv):
     def __init__(self, config={}):
         super().__init__(config)
 
@@ -94,7 +94,7 @@ if __name__ == '__main__':
         agent.restore(args.checkpoint)
 
         # config['env_config']['map_size'] = 3
-        # config['env_config']["connect"] =p.GUI
+        config['env_config']["connect"] =p.GUI
 
         env = FollowTemplateRay(config['env_config'])
         
@@ -108,7 +108,7 @@ if __name__ == '__main__':
                 # if count==0:
                 #     time.sleep(5)
                 alive_agents = [k for k,v in done.items() if v==False]
-                obs = Observation_CNN.observation_fn_2(obs, env)
+                obs = Observation_CNN.observation_fn_2(obs, env, test_config={"size":80, "observation_range":10})
                 actions =  {i:agent.compute_action(obs[i], policy_id=f"pol") 
                                         for i in alive_agents if i!="__all__"}
                 obs, reward, done, info = env.step(actions)
