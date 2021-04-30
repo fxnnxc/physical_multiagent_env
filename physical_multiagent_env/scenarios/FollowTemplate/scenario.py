@@ -75,7 +75,7 @@ class FollowTemplate(PhysicalEnv):
 
     def step(self, agent_action):
         for agent, action in agent_action.items():
-            self.objects['agent'][agent].take_action(action, bound=np.inf)     
+            self.objects['agent'][agent].take_action(action, bound=np.inf, wo_acc=True)     
 
         if 4<= self.phase <=6:   
             for target in self.objects['target']:

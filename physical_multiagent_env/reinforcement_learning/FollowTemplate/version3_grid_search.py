@@ -45,7 +45,7 @@ if __name__ == '__main__':
     parser.add_argument("--checkpoint", type=str)
     args = parser.parse_args()
 
-    with open("version2.json") as f :
+    with open("version3.json") as f :
         general_config = json.load(f)
         rllib_config = general_config['rllib_config']
         env_config = general_config['env_config']

@@ -75,9 +75,6 @@ if __name__ == '__main__':
         if args.resume:
             checkpoint = args.checkpoint 
 
-        from ray.tune import grid_search
-        config['env_config']['phase'] = grid_search([i+1 for i in range(9)])
-
         analysis = tune.run(rllib_config['model'],
                             config=config,
                             stop=rllib_config['stop'],

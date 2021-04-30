@@ -3,7 +3,7 @@
         "agent":{
             "globalScaling" : 1,
             "acc" : 0.12,
-            "max_speed" : 1,
+            "max_speed" : 1.5,
             "color" : [0,125,0,1]
         },
         "target":{
@@ -26,15 +26,15 @@
         "curriculum_learning":1,
         "observation_range" : 10,
         "cnn_size" : 100,
-        "phase" : 4
+        "phase" : 9
     },
 
     "rllib_config":{
-        "name" : "grid_phase",
+        "name" : "phase9",
         "model" : "PPO",
         "num_workers" : 0,
         "num_gpus" : 1,
-        "local_dir" : "./checkpoints",
+        "local_dir" : "./checkpoint_grid",
         "checkpoint_freq" : 300,
         "framework" : "torch",
         "stop":{
