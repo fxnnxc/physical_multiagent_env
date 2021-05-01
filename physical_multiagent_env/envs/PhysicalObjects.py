@@ -95,7 +95,14 @@ class Agent(PhysicalObjects):
                                         'own_velocity': Box(low=-np.inf, high=np.inf, shape=(3,))
                                     }) 
 
-    def take_action(self, action, bound):
+    def take_action(self, action, bound, wo_acc=False):
+        if wo_acc:
+            if action < 5:
+                p.resetBaseVelocity(self.pid, [10*Agent.dx[action]*self.acc, 10*Agent.dy[action]*self.acc, 0])
+            else:
+                raise ValueError("Undefined action %d" %action)
+            return 
+                
         if np.linalg.norm(self.position) > bound:
             force = [-self.position[0]/bound, -self.position[1]/bound, -self.position[2]/bound]
             p.applyExternalForce(self.pid, -1, 

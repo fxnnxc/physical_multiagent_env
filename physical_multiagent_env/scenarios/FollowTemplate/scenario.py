@@ -30,7 +30,7 @@ class FollowTemplate(PhysicalEnv):
         self.maps = [None, GridMap1(), GridMap2(), GridMap3(), GridMap4(), GridMap5(), GridMap6(), GridMap7(), GridMap8(), GridMap9()]
         self.map = self.maps[self.phase]
  
-    # Similar to the linear combination
+    # Similar to the linear combinatio+n
     def set_phase(self, **kwargs):
         self.follow_intensity = kwargs.get("follow_intensity", 0.5)
         self.avoid_intensity = kwargs.get("avoid_intensity", 0.5)
@@ -75,7 +75,7 @@ class FollowTemplate(PhysicalEnv):
 
     def step(self, agent_action):
         for agent, action in agent_action.items():
-            self.objects['agent'][agent].take_action(action, bound=np.inf)     
+            self.objects['agent'][agent].take_action(action, bound=np.inf, wo_acc=True)     
 
         if 4<= self.phase <=6:   
             for target in self.objects['target']:
@@ -152,7 +152,7 @@ class FollowTemplate(PhysicalEnv):
 import time
 import json 
 if __name__ == "__main__":
-    with open("../../reinforcement_learning/FollowTemplate/version1.json") as f :
+    with open("../../reinforcement_learning/FollowTemplate/version3.json") as f :
         config = json.load(f)
 
     config = config['env_config']
@@ -160,18 +160,17 @@ if __name__ == "__main__":
 
     env = FollowTemplate(config)
     
-    for i in range(7,9):
+    for i in range(3,9):
         env.set_phase(phase=1+i)
         env.reset()
-        print(env.phase)
         
-        for j in range(1000):
+        for j in range(5000):
             alive_agents = []
             for index, agent in enumerate(env.objects['agent']):
                 if agent.alive:
                     alive_agents.append(index)
             if j%30==0:
-                action = 1
+                action = 0
 
             state, reward, done, info = env.step({i:action for i in alive_agents})
-            time.sleep(0.00002)
+            time.sleep(0.000005)
