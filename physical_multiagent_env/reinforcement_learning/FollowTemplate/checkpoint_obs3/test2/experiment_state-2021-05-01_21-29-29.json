@@ -5,8 +5,8 @@
   "runner_data": {
     "_max_pending_trials": 0,
     "_metric": null,
-    "_total_time": 3314.382237672806,
-    "_iteration": 255,
+    "_total_time": 3354.1465532779694,
+    "_iteration": 258,
     "_has_errored": false,
     "_fail_fast": false,
     "_server_port": null,
@@ -21,7 +21,7 @@
     },
     "_resumed": false,
     "_start_time": 1619872169.521855,
-    "_last_checkpoint_time": 1619875514.0295823,
+    "_last_checkpoint_time": 1619875553.959566,
     "_checkpoint_period": 10,
     "_session_str": "2021-05-01_21-29-29",
     "checkpoint_file": "/home/bumjin/physical_multiagent_env/physical_multiagent_env/reinforcement_learning/FollowTemplate/checkpoint_obs3/test2/experiment_state-2021-05-01_21-29-29.json",
@@ -29,6 +29,6 @@
   },
   "stats": {
     "start_time": 1619872169.521855,
-    "timestamp": 1619875514.0295823
+    "timestamp": 1619875553.959566
   }
 }

@@ -93,9 +93,10 @@ if __name__ == '__main__':
             raise ValueError()
 
         agent.restore(args.checkpoint)
-
+        p.disconnect()
         # config['env_config']['map_size'] = 3
         config['env_config']["connect"] =p.GUI
+        config['env_config']['phase'] = 4
 
         env = FollowTemplateRay(config['env_config'])
         
@@ -109,13 +110,15 @@ if __name__ == '__main__':
                 # if count==0:
                 #     time.sleep(5)
                 alive_agents = [k for k,v in done.items() if v==False]
-                obs = Observation_CNN.observation_fn_2(obs, env, test_config={"size":80, "observation_range":10})
+                obs = Observation_CNN.observation_fn_2(obs, env, test_config={"size":100, "observation_range":10})
                 actions =  {i:agent.compute_action(obs[i], policy_id=f"pol") 
                                         for i in alive_agents if i!="__all__"}
                 obs, reward, done, info = env.step(actions)
                 time.sleep(0.001)
                 count += 1
                 Reward[-1] += sum(reward.values())/len(reward.values())
+                if count > config['env_config']['max_timestep']:
+                    break
             print(i,  Reward[-1])
         print(np.mean(Reward), np.std(Reward))
     
