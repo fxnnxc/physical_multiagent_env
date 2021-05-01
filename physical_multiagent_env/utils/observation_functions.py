@@ -151,14 +151,20 @@ class Observation_CNN:
                         new_obs[a][position[0], position[1]] = i+1
 
                         s = max(1, int(p.getCollisionShapeData(obj.pid, -1)[0][3][0]*(size//2)/observation_range))
-                        for r in range(s):
-                            for c in range(s):
+                        for r in range(s+1):
+                            for c in range(s+1):
                                 # new_obs[a][position[0]+r-s//2, position[1]+c-s//2, 1:] = agent.relative_velocity(obj)
-                                new_obs[a][position[0]+r-s//2, position[1]+c-s//2] = i+1
+                                if 0<= position[0]+r-(s)//2< size and 0 <=position[1]+c-(s)//2 < size:
+                                    new_obs[a][position[0]+r-(s)//2, position[1]+c-(s)//2] = i+1
+
                     elif distance >= observation_range and obj_type =="target":
                         position = agent.relative_position(obj)
-                        position *= (observation_range / distance )
-                        new_obs[a][position[0], position[1]] = i+1
+                        position = np.ceil(transform(agent.relative_position(obj), size, observation_range))
+                        position = position.astype(int)
+                        new_obs[a][position[0], position[1]] = max(5,new_obs[a][position[0], position[1]] )
+
+                    # if obj_type =="target":
+                    #     print(position)
 
 
 
@@ -166,7 +172,7 @@ class Observation_CNN:
         return new_obs
 
 def transform(array, size, observation_range):
-    return np.clip(array * (size//2) / observation_range  + (size//2), 0, size-1)
+    return np.clip(array * ((size+1)//2) / observation_range  + ((size+1)//2), 0, size-1)
 
 
 def dangerous_degree(position, velocity, globalScaling):

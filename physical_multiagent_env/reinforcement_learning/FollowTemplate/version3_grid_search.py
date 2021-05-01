@@ -53,12 +53,12 @@ if __name__ == '__main__':
     ray.init()
     register_env("FollowTemplateRay", lambda config:FollowTemplateRay(config))
 
-    observation = Observation_CNN(num_targets=1, size=100, observation_range=10)
+    observation = Observation_CNN(num_targets=1, size=env_config['cnn_size'], observation_range=env_config['observation_range'])
     config = {
         "env" : "FollowTemplateRay",
         "num_workers" : rllib_config['num_workers']  ,
         "num_gpus": rllib_config['num_gpus'] ,
-        "lr" :  rllib_config['lr'],
+        #"lr" :  rllib_config.get('lr', None),
         "env_config": env_config,
         "multiagent":{
             "policies":{
@@ -66,7 +66,7 @@ if __name__ == '__main__':
             },
             "policy_mapping_fn": lambda i : "pol",
             "policies_to_train":["pol"],
-            "observation_fn" : Observation_CNN.observation_fn_2
+            "observation_fn" : Observation_CNN.observation_fn_3
         },
         'framework' : rllib_config['framework'],
         "callbacks":{"on_train_result":on_train_result}
@@ -110,7 +110,7 @@ if __name__ == '__main__':
                 # if count==0:
                 #     time.sleep(5)
                 alive_agents = [k for k,v in done.items() if v==False]
-                obs = Observation_CNN.observation_fn_2(obs, env, test_config={"size":config['env_config']['cnn_size'], "observation_range":config['env_config']["observation_range"]})
+                obs = Observation_CNN.observation_fn_3(obs, env, test_config={"size":config['env_config']['cnn_size'], "observation_range":config['env_config']["observation_range"]})
                 actions =  {i:agent.compute_action(obs[i], policy_id=f"pol") 
                                         for i in alive_agents if i!="__all__"}
                 obs, reward, done, info = env.step(actions)
