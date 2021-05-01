@@ -99,7 +99,7 @@ if __name__ == '__main__':
 
         env = FollowTemplateRay(config['env_config'])
         
-        Reward = [] 
+        Reward = []     
         for i in range(50):
             obs = env.reset()
             done = env.done
