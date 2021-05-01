@@ -26,11 +26,11 @@
         "curriculum_learning":1,
         "observation_range" : 10,
         "cnn_size" : 100,
-        "phase" : 9
+        "phase" : 1
     },
 
     "rllib_config":{
-        "name" : "phase9",
+        "name" : "phase1",
         "model" : "PPO",
         "num_workers" : 0,
         "num_gpus" : 1,

@@ -109,7 +109,7 @@ if __name__ == '__main__':
                 # if count==0:
                 #     time.sleep(5)
                 alive_agents = [k for k,v in done.items() if v==False]
-                obs = Observation_CNN.observation_fn_2(obs, env, test_config={"size":80, "observation_range":10})
+                obs = Observation_CNN.observation_fn_2(obs, env, test_config={"size":config['env_config']['cnn_size'], "size":config['env_config']["observation_range"]:10})
                 actions =  {i:agent.compute_action(obs[i], policy_id=f"pol") 
                                         for i in alive_agents if i!="__all__"}
                 obs, reward, done, info = env.step(actions)
