@@ -2,13 +2,13 @@
     "env_config":{
         "agent":{
             "globalScaling" : 1,
-            "acc" : 0.12,
+            "acc" : 0.3,
             "max_speed" : 1.5,
             "color" : [0,125,0,1]
         },
         "target":{
             "globalScaling" : 2,
-            "acc" : 0.1,
+            "acc" : 0.2,
             "max_speed" : 2,
             "color" : [0,0,125,1]
         },
@@ -22,19 +22,20 @@
         "num_obstacles" : 10,
         "num_targets" : 1,
         "map_size" : 4,
-        "max_timestep" : 5000,
+        "max_timestep" : 4000,
         "curriculum_learning":1,
         "observation_range" : 10,
         "cnn_size" : 100,
-        "phase" : 1
+        "phase" : 4
     },
 
     "rllib_config":{
-        "name" : "phase1",
-        "model" : "PPO",
+        "name" : "0.0001",
+        "policy" : "PPO",
         "num_workers" : 0,
         "num_gpus" : 1,
-        "local_dir" : "./checkpoint_grid",
+        "lr" : 0.0001,
+        "local_dir" : "./checkpoint_grid_no_crash",
         "checkpoint_freq" : 300,
         "framework" : "torch",
         "stop":{

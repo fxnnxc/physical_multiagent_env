@@ -127,6 +127,44 @@ class Observation_CNN:
 
         return new_obs
 
+    def observation_fn_3(agent_obs, test_env=None, **kw):
+        env= test_env if test_env else kw['worker'].env
+        if 'worker' in kw.keys():
+            size = kw['worker'].policy_config['env_config']['cnn_size']
+            observation_range =kw['worker'].policy_config['env_config']['observation_range'] #env.observation_range
+        else:
+            size = kw['test_config']['size']
+            observation_range = kw['test_config']['observation_range']
+        new_obs = {a:np.zeros((size, size)) for a in agent_obs.keys()}
+
+        for a in agent_obs.keys():
+            agent = env.objects['agent'][a]
+            for i, (obj_type, obj_list) in enumerate(env.objects.items()):
+                for obj in  obj_list:
+                    if not obj.alive:
+                        continue
+                    distance = agent.distance(obj, measure="manhattan")
+                    if distance < observation_range:
+                        position = np.ceil(transform(agent.relative_position(obj), size, observation_range))
+                        position = position.astype(int)
+                        # new_obs[a][position[0], position[1], 1:] = agent.relative_velocity(obj)
+                        new_obs[a][position[0], position[1]] = i+1
+
+                        s = max(1, int(p.getCollisionShapeData(obj.pid, -1)[0][3][0]*(size//2)/observation_range))
+                        for r in range(s):
+                            for c in range(s):
+                                # new_obs[a][position[0]+r-s//2, position[1]+c-s//2, 1:] = agent.relative_velocity(obj)
+                                new_obs[a][position[0]+r-s//2, position[1]+c-s//2] = i+1
+                    elif distance >= observation_range and obj_type =="target":
+                        position = agent.relative_position(obj)
+                        position *= (observation_range / distance )
+                        new_obs[a][position[0], position[1]] = i+1
+
+
+
+
+        return new_obs
+
 def transform(array, size, observation_range):
     return np.clip(array * (size//2) / observation_range  + (size//2), 0, size-1)
 

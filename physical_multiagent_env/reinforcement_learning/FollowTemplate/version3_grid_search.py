@@ -58,6 +58,7 @@ if __name__ == '__main__':
         "env" : "FollowTemplateRay",
         "num_workers" : rllib_config['num_workers']  ,
         "num_gpus": rllib_config['num_gpus'] ,
+        "lr" :  rllib_config['lr'],
         "env_config": env_config,
         "multiagent":{
             "policies":{
@@ -75,7 +76,7 @@ if __name__ == '__main__':
         if args.resume:
             checkpoint = args.checkpoint 
 
-        analysis = tune.run(rllib_config['model'],
+        analysis = tune.run(rllib_config['policy'],
                             config=config,
                             stop=rllib_config['stop'],
                             checkpoint_freq = rllib_config['checkpoint_freq'],
@@ -109,7 +110,7 @@ if __name__ == '__main__':
                 # if count==0:
                 #     time.sleep(5)
                 alive_agents = [k for k,v in done.items() if v==False]
-                obs = Observation_CNN.observation_fn_2(obs, env, test_config={"size":config['env_config']['cnn_size'], "size":config['env_config']["observation_range"]:10})
+                obs = Observation_CNN.observation_fn_2(obs, env, test_config={"size":config['env_config']['cnn_size'], "observation_range":config['env_config']["observation_range"]})
                 actions =  {i:agent.compute_action(obs[i], policy_id=f"pol") 
                                         for i in alive_agents if i!="__all__"}
                 obs, reward, done, info = env.step(actions)
