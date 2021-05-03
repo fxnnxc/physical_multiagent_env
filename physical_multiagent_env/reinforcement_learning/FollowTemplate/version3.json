@@ -24,18 +24,18 @@
         "map_size" : 4,
         "max_timestep" : 4000,
         "curriculum_learning":1,
-        "observation_range" : 2,
-        "cnn_size" : 10,
+        "observation_range" : 3,
+        "cnn_size" : 30,
         "phase" : 4
     },
 
     "rllib_config":{
-        "name" : "test2",
+        "name" : "0503_observation_range_3",
         "policy" : "PPO",
-        "num_workers" : 4,
+        "num_workers" : 10,
         "num_gpus" : 1,
         "local_dir" : "./checkpoint_obs3",
-        "checkpoint_freq" : 300,
+        "checkpoint_freq" : 500,
         "framework" : "torch",
         "stop":{
             "training_iteration" : 1000,

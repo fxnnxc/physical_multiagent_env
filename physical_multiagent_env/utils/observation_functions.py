@@ -139,12 +139,14 @@ class Observation_CNN:
 
         for a in agent_obs.keys():
             agent = env.objects['agent'][a]
+            #agent_size = p.getCollisionShapeData(agent.pid, -1)[0][3][0]
             for i, (obj_type, obj_list) in enumerate(env.objects.items()):
                 for obj in  obj_list:
                     if not obj.alive:
                         continue
                     distance = agent.distance(obj, measure="manhattan")
-                    if distance < observation_range:
+                    obstacle_size = p.getCollisionShapeData(obj.pid, -1)[0][3][0]
+                    if distance-obstacle_size < observation_range:
                         position = np.ceil(transform(agent.relative_position(obj), size, observation_range))
                         position = position.astype(int)
                         # new_obs[a][position[0], position[1], 1:] = agent.relative_velocity(obj)
