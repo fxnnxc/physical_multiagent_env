@@ -34,7 +34,7 @@
         "policy" : "PPO",
         "num_workers" : 1,
         "num_gpus" : 1,
-        "local_dir" : "./checkpoint_0504",
+        "local_dir" : "./checkpoint_0505",
         "checkpoint_freq" : 500,
         "framework" : "torch",
         "stop":{
