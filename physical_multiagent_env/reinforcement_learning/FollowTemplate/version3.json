@@ -22,24 +22,23 @@
         "num_obstacles" : 10,
         "num_targets" : 1,
         "map_size" : 4,
-        "max_timestep" : 4000,
+        "max_timestep" : 5000,
         "curriculum_learning":1,
         "observation_range" : 3,
-        "cnn_size" : 30,
-        "phase" : 4
+        "cnn_size" : 20,
+        "phase" : 9
     },
 
     "rllib_config":{
-        "name" : "0503_observation_range_3",
+        "name" : "phase9",
         "policy" : "PPO",
-        "num_workers" : 10,
+        "num_workers" : 1,
         "num_gpus" : 1,
-        "local_dir" : "./checkpoint_obs3",
+        "local_dir" : "./checkpoint_0504",
         "checkpoint_freq" : 500,
         "framework" : "torch",
         "stop":{
-            "training_iteration" : 1000,
-            "episode_reward_mean" :0.9
+            "training_iteration" : 1000
         },
         "exploration_config": {
             "type": "EpsilonGreedy",

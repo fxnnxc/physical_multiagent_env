@@ -128,6 +128,7 @@ class Observation_CNN:
         return new_obs
 
     def observation_fn_3(agent_obs, test_env=None, **kw):
+        values = {'obstacle':1, 'agent':2, 'target':3, "out_target":4}
         env= test_env if test_env else kw['worker'].env
         if 'worker' in kw.keys():
             size = kw['worker'].policy_config['env_config']['cnn_size']
@@ -146,31 +147,24 @@ class Observation_CNN:
                         continue
                     distance = agent.distance(obj, measure="manhattan")
                     obstacle_size = p.getCollisionShapeData(obj.pid, -1)[0][3][0]
-                    if distance-obstacle_size < observation_range:
+                    if distance-obstacle_size//2 < observation_range:
                         position = np.ceil(transform(agent.relative_position(obj), size, observation_range))
                         position = position.astype(int)
                         # new_obs[a][position[0], position[1], 1:] = agent.relative_velocity(obj)
-                        new_obs[a][position[0], position[1]] = i+1
+                        new_obs[a][position[0], position[1]] = max(values[obj_type], new_obs[a][position[0], position[1]] )
 
                         s = max(1, int(p.getCollisionShapeData(obj.pid, -1)[0][3][0]*(size//2)/observation_range))
-                        for r in range(s+1):
-                            for c in range(s+1):
+                        for r in range(s):
+                            for c in range(s):
                                 # new_obs[a][position[0]+r-s//2, position[1]+c-s//2, 1:] = agent.relative_velocity(obj)
                                 if 0<= position[0]+r-(s)//2< size and 0 <=position[1]+c-(s)//2 < size:
-                                    new_obs[a][position[0]+r-(s)//2, position[1]+c-(s)//2] = i+1
+                                    new_obs[a][position[0]+r-(s)//2, position[1]+c-(s)//2] = max(values[obj_type], new_obs[a][position[0]+r-(s)//2, position[1]+c-(s)//2])
 
                     elif distance >= observation_range and obj_type =="target":
                         position = agent.relative_position(obj)
-                        position = np.ceil(transform(agent.relative_position(obj), size, observation_range))
+                        position = transform(agent.relative_position(obj), size, observation_range)
                         position = position.astype(int)
-                        new_obs[a][position[0], position[1]] = max(5,new_obs[a][position[0], position[1]] )
-
-                    # if obj_type =="target":
-                    #     print(position)
-
-
-
-
+                        new_obs[a][position[0], position[1]] = 4
         return new_obs
 
 def transform(array, size, observation_range):
